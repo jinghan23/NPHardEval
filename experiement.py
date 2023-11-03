@@ -1,5 +1,6 @@
+# TODO: write for TSP and MSP
 ### Import Data
-from data import Data
+from old_scripts.data import Data # assume we have all data
 
 # print(Data)
 
@@ -26,22 +27,22 @@ print(azureGPT.get_gpt_output(eg_prompt))
 # Claude 2 (TBD)
 
 ### Single LLM Reasoning Benchmark
-# from prompt import reasoningPrompts, feedbackPrompts
+from prompts import reasoningPrompts, feedbackPrompts
 
-# # GPT
-# r = reasoningPrompts
-# f = feedbackPrompts
-# for q in Data[:3]:
-#     chromatic_number = q.split('\n')[0][-1] # last character of the first line
-#     number_of_vertices = q.split('\n')[1].split(' ')[2] # third word of the second line
-#     prompt_text = r['Intro'] + '\n' \
-#         + r['Initial_question'].format(max_vertices=number_of_vertices,max_colors=chromatic_number) + '\n' \
-#         + r['Output_content'] + '\n' \
-#         + r['Option_with_reasoning'] + \
-#         '\n The graph is below: \n'
-#     for line in q.split('\n')[2:]:
-#         vertex_list = line.split(' ')
-#         this_line = "Vertex {} is connected to vertex {}.".format(vertex_list[1],vertex_list[2])
-#         prompt_text += this_line + '\n'
-#     print(prompt_text)
-#     print(azureGPT.get_gpt_output(prompt_text))
+# GPT
+r = reasoningPrompts
+f = feedbackPrompts
+for q in Data[:3]:
+    chromatic_number = q.split('\n')[0][-1] # last character of the first line
+    number_of_vertices = q.split('\n')[1].split(' ')[2] # third word of the second line
+    prompt_text = r['Intro'] + '\n' \
+        + r['Initial_question'].format(max_vertices=number_of_vertices,max_colors=chromatic_number) + '\n' \
+        + r['Output_content'] + '\n' \
+        + r['Option_with_reasoning'] + \
+        '\n The graph is below: \n'
+    for line in q.split('\n')[2:]:
+        vertex_list = line.split(' ')
+        this_line = "Vertex {} is connected to vertex {}.".format(vertex_list[1],vertex_list[2])
+        prompt_text += this_line + '\n'
+    print(prompt_text)
+    print(azureGPT.get_gpt_output(prompt_text))

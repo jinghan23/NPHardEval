@@ -1,6 +1,6 @@
 # ref: https://github.com/composable-models/llm_multiagent_debate/tree/main
 
-from data import Data
+from old_scripts.data import Data
 from models import *
 from experiement import * # this will later becomes games.py
 from prompts import reasoningPrompts as r, feedbackPrompts as f
