@@ -9,7 +9,7 @@ import numpy as np
 import os
 import pandas as pd
 
-DATA_PATH = '../Data/'
+DATA_PATH = '../Data/TSP/'
 
 # Create a directory for data if it doesn't exist
 os.makedirs(DATA_PATH, exist_ok=True)
@@ -31,17 +31,16 @@ def distance_matrix_to_csv(matrix, filename):
     df.to_csv(filename, index=False, header=False)
 
 # Generate instances of TSP
-def generate_tsp_instances(node_ranges, num_instances_per_level):
-    for level, node_range in enumerate(node_ranges):
-        print(f"Generating instances for complexity level {level}")
-        
-        for instance_num in range(num_instances_per_level):
-            n = np.random.choice(node_range)
+def generate_tsp_instances(node_nums, num_instances_per_level):
+    for level, node_num in enumerate(node_nums):
+        for i in range(num_instances_per_level):
+            print(f"Generating instances for complexity level {level}")
+            n = np.random.choice(node_num)
             distance_matrix = generate_distance_matrix(n)
-            filename = f"{DATA_PATH}synthesized_data_TSP_level_{level}_instance_{instance_num}.csv"
+            filename = f"{DATA_PATH}synthesized_data_TSP_level_{level}_instance_{node_num}.csv"
             distance_matrix_to_csv(distance_matrix, filename)
 
 # Configuration for complexity levels
-num_instances_per_level = 1 # will change to 100
-node_ranges = [range(5, 11), range(10, 16), range(15, 21), range(20, 26), range(25, 31)]
-generate_tsp_instances(node_ranges, num_instances_per_level)
+num_instances_per_level = 10
+node_nums = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+generate_tsp_instances(node_nums, num_instances_per_level)

@@ -7,7 +7,7 @@ The save_instances_to_json function saves all generated instances to a JSON file
 import random
 import json
 
-DATA_PATH = '../Data/'
+DATA_PATH = '../Data/MSP/'
 
 # Function to generate random meetings, participants, and time slots
 def generate_msp_instance(num_meetings, num_participants, num_time_slots, complexity_level):
@@ -52,15 +52,23 @@ def save_instances_to_json(instances, file_path):
         json.dump(instances, f, indent=2)
 
 # Define complexity levels based on a tuple of (num_meetings, num_participants, num_time_slots)
+# num_participants = 1.5 num_meetings （round down）
+# num_time_slots = 2 num_participants
+# for 10 levels
 complexity_params = [
-    (5, 10, 10),  # Level 1: Simple
-    (7, 15, 15),  # Level 2: Medium 1
-    (10, 20, 20), # Level 2: Medium 2
-    (15, 30, 30), # Level 3: Hard 1
-    (20, 40, 40), # Level 3: Hard 2
+    (4, 6, 8),  # Level 1
+    (5, 7, 10),  # Level 2
+    (6, 9, 12),  # Level 3
+    (7, 10, 14),  # Level 4
+    (8, 12, 16),  # Level 5
+    (9, 13, 18),  # Level 6
+    (10, 15, 20),  # Level 7
+    (11, 16, 22),  # Level 8
+    (12, 18, 24),  # Level 9
+    (13, 19, 26)  # Level 10
 ]
 
 # Example usage:
-num_instances = 15  # Total number of instances to generate
+num_instances = 10  # Number of instances to generate per complexity level
 instances = generate_msp_instances(num_instances, complexity_params)
 save_instances_to_json(instances, DATA_PATH+'msp_instances.json')
