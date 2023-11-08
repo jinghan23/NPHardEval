@@ -90,28 +90,3 @@ num_complexity_levels = 10
 avg_edges_list=[6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
 node_counts_list = [range(6,7),range(7,8),range(8,9),range(9,10),range(10,11),range(11,12),range(12,13),range(13,14),range(14,15),range(15,16)]
 generate_instances(avg_edges_list, node_counts_list, num_instances_per_level, num_complexity_levels)
-
-# ### OG code
-# graphs = []
-# dimacs_outputs = []
-
-# # Set desired average edges and range of node counts
-# avg_edges = 24
-# node_counts = range(10, 18)  # 10 to 17 inclusive
-
-
-# for _ in range(100):
-#     # Heuristic approach: vary n to approach the desired average edges for Erdos-Rényi graph
-#     for n in node_counts:
-#         potential_g = generate_graph(n, previous_graphs=graphs)
-#         if abs(potential_g.number_of_edges() - avg_edges) < n/2:  # Accept graph if within range
-#             graphs.append(potential_g)
-#             dimacs_outputs.append(graph_to_dimacs(potential_g))
-#             break
-
-# # Now, dimacs_outputs contains the DIMACS representations of the generated graphs
-# # Save them to files in the data folder one level above
-
-# with open(DATA_PATH+'synthesized_data_GCP_1.txt', 'w') as file:
-#     for output in dimacs_outputs:
-#         file.write(output + '\n\n')  # Separate each graph by two newline characters

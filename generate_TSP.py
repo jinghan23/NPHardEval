@@ -33,11 +33,12 @@ def distance_matrix_to_csv(matrix, filename):
 # Generate instances of TSP
 def generate_tsp_instances(node_nums, num_instances_per_level):
     for level, node_num in enumerate(node_nums):
-        for i in range(num_instances_per_level):
+        i=0
+        while i<num_instances_per_level:
+            i += 1
             print(f"Generating instances for complexity level {level}")
-            n = np.random.choice(node_num)
-            distance_matrix = generate_distance_matrix(n)
-            filename = f"{DATA_PATH}synthesized_data_TSP_level_{level}_instance_{node_num}.csv"
+            distance_matrix = generate_distance_matrix(node_num)
+            filename = f"{DATA_PATH}synthesized_data_TSP_level_{level}_instance_{i}.csv"
             distance_matrix_to_csv(distance_matrix, filename)
 
 # Configuration for complexity levels

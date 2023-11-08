@@ -1,61 +1,94 @@
 # GCP
-def read_dimacs_format(file_path):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        # Read the number of vertices and edges
-        p_line = next(line for line in lines if line.startswith('p'))
-        _, _, num_vertices, num_edges = p_line.split()
-        num_vertices, num_edges = int(num_vertices), int(num_edges)
+def read_dimacs_format(dimacs_str):
+    lines = dimacs_str.strip().split('\n')
+    # Read the number of vertices and edges
+    p_line = next(line for line in lines if line.startswith('p'))
+    _, _, num_vertices, num_edges = p_line.split()
+    num_vertices, num_edges = int(num_vertices), int(num_edges)
 
-        # Create adjacency list
-        adjacency_list = {i: set() for i in range(1, num_vertices + 1)}
+    # Create adjacency list
+    adjacency_list = {i: set() for i in range(1, num_vertices + 1)}
 
-        # Read the edges
-        for line in lines:
-            if line.startswith('e'):
-                _, vertex1, vertex2 = line.split()
-                vertex1, vertex2 = int(vertex1), int(vertex2)
+    # Read the edges and ignore those that reference non-existing vertices
+    for line in lines:
+        if line.startswith('e'):
+            _, vertex1, vertex2 = line.split()
+            vertex1, vertex2 = int(vertex1), int(vertex2)
+            if vertex1 in adjacency_list and vertex2 in adjacency_list:
                 adjacency_list[vertex1].add(vertex2)
                 adjacency_list[vertex2].add(vertex1)
 
     return num_vertices, adjacency_list
 
 
-def greedy_coloring(num_vertices, adjacency_list):
-    colors = {}
-    
-    for vertex in range(1, num_vertices + 1):
-        neighbor_colors = {colors.get(neighbor) for neighbor in adjacency_list[vertex]}
-        color = 1
-        while color in neighbor_colors:
-            color += 1
-        colors[vertex] = color
-    
-    return colors
+import ast
+def parse_answer(answer_str):
+    # # Convert the answer string to a dictionary
+    # answer_dict = {}
+    # # Remove the braces and split the string by commas
+    # entries = answer_str.strip("}{").split(', ')
+    # for entry in entries:
+    #     vertex, color = entry.split(':')
+    #     answer_dict[int(vertex)] = color
+    # return answer_dict
+    all_answers = ast.literal_eval(answer_str)['Answer']
+    answer_dict = {}
+    for pair in all_answers:
+        vertex, color = pair.split(":")
+        answer_dict[int(vertex)] = color
+    return answer_dict
 
 
-def verify_gcp(graph_file_path):
-    num_vertices, adjacency_list = read_dimacs_format(graph_file_path)
-    colors = greedy_coloring(num_vertices, adjacency_list)
+def gcpCheck(dimacs_str, answer_str):
+    num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
+    answer_colors = parse_answer(answer_str)
+    print(adjacency_list)
+    print(answer_colors)
 
+    # Check if all colors in the answer are valid
     for vertex, neighbors in adjacency_list.items():
         for neighbor in neighbors:
-            if colors[vertex] == colors[neighbor]:
+            if answer_colors[vertex] == answer_colors[neighbor]:
                 print(f"Invalid coloring: Vertex {vertex} and {neighbor} have the same color.")
                 return False
 
-    print(f"Valid coloring found with {max(colors.values())} colors: {colors}")
+    print(f"Valid coloring found with {len(set(answer_colors.values()))} colors: {answer_colors}")
     return True
 
+# # Example usage:
+# dimacs_format_str = """
+# p edge 14 21
+# e 1 2
+# e 1 5
+# e 2 3
+# e 2 6
+# e 3 4
+# e 3 7
+# e 4 8
+# e 5 6
+# e 5 9
+# e 6 7
+# e 6 10
+# e 7 8
+# e 7 11
+# e 8 12
+# e 9 10
+# e 9 13
+# e 10 11
+# e 10 14
+# e 11 12
+# e 11 15
+# e 12 16
+# """
+# answer_str = "{'Answer': ['1:A', '2:B', '3:C', '4:B', '5:C', '6:A', '7:C', '8:B', '9:A', '10:A', '11:B', '12:B', '13:C', '14:A']}"
 
-# Example usage:
-# Assuming the graph is defined in 'graph.dimacs'
-# graph_file_path = 'graph.dimacs'
-# verify_gcp(graph_file_path)
+# # Call the function with the example input
+# gcpCheck(dimacs_format_str, answer_str)
+
 
 
 # MSP
-def validate_msp_solution(instance, solution):
+def mspCheck(instance, solution):
     """
     Validate the MSP solution.
     
@@ -104,6 +137,7 @@ def validate_msp_solution(instance, solution):
 
 # Example usage:
 # Define an example MSP instance
+# Need to figure out how to deal with each timeslots's duration
 msp_instance = {
     'meetings': [
         {'id': 0, 'duration': 2},
@@ -117,15 +151,15 @@ msp_instance = {
     'complexity_level': 1
 }
 
-# Define a solution for the MSP instance
-msp_solution = {
-    0: 0,  # Meeting 0 scheduled at time slot 0
-    1: 3   # Meeting 1 scheduled at time slot 3
-}
+# # Define a solution for the MSP instance
+# msp_solution = {
+#     0: 0,  # Meeting 0 scheduled at time slot 0
+#     1: 3   # Meeting 1 scheduled at time slot 3
+# }
 
-# Validate the solution
-is_valid, message = validate_msp_solution(msp_instance, msp_solution)
-print(is_valid, message)
+# # Validate the solution
+# is_valid, message = mspCheck(msp_instance, msp_solution)
+# print(is_valid, message)
 
 
 
@@ -177,7 +211,7 @@ distance_matrix = np.array([
 # print(f"The greedy TSP tour: {tour}")
 # print(f"Total distance of the greedy TSP tour: {total_distance}")
 
-def check_tsp_solution(tour_string, distance_matrix):
+def tspCheck(tour_string, distance_matrix):
     """
     Check if the TSP solution is complete and if the distance matches the greedy solution.
     
@@ -210,10 +244,10 @@ def check_tsp_solution(tour_string, distance_matrix):
 
 # Example usage:
 
-# Given a tour string (replace with your tour string)
-tour_string = "0->1->2->3->0"
+# # Given a tour string (replace with your tour string)
+# tour_string = "0->1->2->3->0"
 
-# Assuming distance_matrix is a previously defined numpy array representing the distances
-validity, message = check_tsp_solution(tour_string, distance_matrix)
-print(message)
+# # Assuming distance_matrix is a previously defined numpy array representing the distances
+# validity, message = tspCheck(tour_string, distance_matrix)
+# print(message)
 
