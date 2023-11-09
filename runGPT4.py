@@ -110,6 +110,7 @@ if __name__ == '__main__':
     mspData = load_data('msp')
     for q in mspData[:10]:
         # print(q)
+        print("====================\n====================\n====================\n")
         output = runMSP(q)
         print(output)
         print(mspCheck(q,output))

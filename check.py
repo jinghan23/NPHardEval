@@ -133,12 +133,15 @@ def mspCheck(instance, solution):
     # Check if any participant is double-booked
     participants_schedule = {p_id: [] for p_id in instance['participants']}
     for m_id, time_slots in solution.items():
-        duration = next(meeting['duration'] for meeting in instance['meetings'] if meeting['id'] == m_id)
-        if len(time_slots) != duration:
-            return False, f"Meeting {m_id} duration does not match the number of scheduled time slots."
-        for p_id, participant in instance['participants'].items():
-            if m_id in participant['meetings']:
-                participants_schedule[p_id].extend(time_slots)
+        try:
+            duration = next(meeting['duration'] for meeting in instance['meetings'] if meeting['id'] == m_id)
+            if len(time_slots) != duration:
+                return False, f"Meeting {m_id} duration does not match the number of scheduled time slots."
+            for p_id, participant in instance['participants'].items():
+                if m_id in participant['meetings']:
+                    participants_schedule[p_id].extend(time_slots)
+        except:
+            return False, f"Meeting {m_id} is not in the instance or program error."
 
     for p_id, slots in participants_schedule.items():
         if len(slots) != len(set(slots)):

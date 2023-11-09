@@ -9,7 +9,7 @@ tspPrompts = {
 
 mspPrompts = {
     "Intro": "The meeting scheduling problem (MSP) is a type of constraint satisfaction problem where the goal is to find a suitable time slot for a meeting that all participants can attend without conflicts in their schedules.",
-    "Initial_question": "There are {total_participants} participants with their available time slots. There are {total_timeslots} consecutive non-overlapping time slots. Meetings may also have different durations from 1 to 3 slots.",
+    "Initial_question": "There are {total_participants} participants with their available time slots. There are {total_timeslots} consecutive non-overlapping time slots. Let's assume all meetings has duration of 1.", #Meetings may also have different durations from 1 to 3 slots
     "Output_content": "Please provide a time slot where all participants can attend the meeting. The output should be formatted as meeting number followed by a list of slots.",
     "Option_no_reasoning": "Do not include any reasoning or explanation in your answer. Your output should be in the format '{'Answer': '{'0:[1,2], 1:[4], ...'}'}'.",
     "Option_with_reasoning": "You should also include your step by step reasoning for selecting the time slot. Your output should be in the format '{'Answer': '{'0:[1,2], 1:[4], ...'}', 'Reasoning': a step by step walkthrough}'.",

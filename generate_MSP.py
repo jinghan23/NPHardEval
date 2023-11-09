@@ -23,7 +23,8 @@ def generate_msp_instance(num_meetings, num_participants, num_time_slots, comple
     for m_id in range(num_meetings):
         meeting = {
             'id': m_id,
-            'duration': random.randint(1, 3)  # Duration between 1 to 3 time slots
+            'duration': 1
+            # 'duration': random.randint(1, 3)  # Duration between 1 to 3 time slots
         }
         instance['meetings'].append(meeting)
     
@@ -39,11 +40,15 @@ def generate_msp_instance(num_meetings, num_participants, num_time_slots, comple
 # Generate a list of problem instances with varying complexity levels
 def generate_msp_instances(num_instances, complexity_params):
     instances = []
-    for i in range(num_instances):
-        # Complexity parameters: (num_meetings, num_participants, num_time_slots)
-        params = complexity_params[i % len(complexity_params)]
-        instance = generate_msp_instance(*params, complexity_level=i % len(complexity_params) + 1)
-        instances.append(instance)
+    for complexity_param in complexity_params:
+        for i in range(num_instances):
+            instance = generate_msp_instance(*complexity_param, complexity_level=complexity_param[0]-1)
+            instances.append(instance)
+    # for i in range(num_instances):
+    #     # Complexity parameters: (num_meetings, num_participants, num_time_slots)
+    #     params = complexity_params[i % len(complexity_params)]
+    #     instance = generate_msp_instance(*params, complexity_level=i % len(complexity_params) + 1)
+    #     instances.append(instance)
     return instances
 
 # Save the instances to a JSON file
@@ -52,21 +57,20 @@ def save_instances_to_json(instances, file_path):
         json.dump(instances, f, indent=2)
 
 # Define complexity levels based on a tuple of (num_meetings, num_participants, num_time_slots)
-# num_participants = 1.5 num_meetings （round down）
-# num_time_slots = 2 num_participants
+# num_participants = num_meetings + 1
+# num_time_slots = num_meetings + 2
 # for 10 levels
-# TODO: reduce the complexity, 4->2
 complexity_params = [
-    (4, 6, 8),  # Level 1
-    (5, 7, 10),  # Level 2
-    (6, 9, 12),  # Level 3
-    (7, 10, 14),  # Level 4
-    (8, 12, 16),  # Level 5
-    (9, 13, 18),  # Level 6
-    (10, 15, 20),  # Level 7
-    (11, 16, 22),  # Level 8
-    (12, 18, 24),  # Level 9
-    (13, 19, 26)  # Level 10
+    (2, 3, 4),  # Level 1
+    (3, 4, 5),  # Level 2
+    (4, 5, 6),  # Level 3
+    (5, 6, 7),  # Level 4
+    (6, 7, 8),  # Level 5
+    (7, 8, 9),  # Level 6
+    (8, 9, 10),  # Level 7
+    (9, 10, 11),  # Level 8
+    (10, 11, 12),  # Level 9
+    (11, 12, 13)  # Level 10
 ]
 
 # Example usage:
