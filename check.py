@@ -91,53 +91,64 @@ def gcpCheck(dimacs_str, answer_str):
 def mspCheck(instance, solution):
     """
     Validate the MSP solution.
-    
+
     Parameters:
     - instance: The MSP instance as a dictionary.
-    - solution: A dictionary with meeting ids as keys and scheduled time slots as values.
-    
+    - solution: A dictionary with meeting ids as keys and lists of scheduled time slots as values.
+
     Returns:
     - A tuple (is_valid, message). is_valid is True if the solution is valid, False otherwise.
       message contains information about the validity of the solution.
     """
-    
+    # convert solution to dictionary
+    solution = ast.literal_eval(solution)["Answer"]
+    # change string key to integer key
+    solution = {int(k):v for k,v in solution.items()}
+
     # Check if all meetings are scheduled within the available time slots
     for meeting in instance['meetings']:
         m_id = meeting['id']
         duration = meeting['duration']
-        scheduled_slot = solution.get(m_id, None)
-        
+        scheduled_slots = solution.get(m_id, None)
+
         # Check if the meeting is scheduled
-        if scheduled_slot is None:
+        if scheduled_slots is None:
             return False, f"Meeting {m_id} is not scheduled."
-        
+
         # Check if the meeting fits within the number of total time slots
-        if scheduled_slot + duration > instance['time_slots']:
+        if any(slot >= instance['time_slots'] for slot in scheduled_slots):
             return False, f"Meeting {m_id} does not fit within the available time slots."
-        
+
+        # Check if the scheduled slots are contiguous and fit the meeting duration
+        if len(scheduled_slots) != duration or not all(
+                scheduled_slots[i] + 1 == scheduled_slots[i + 1] for i in range(len(scheduled_slots) - 1)):
+            return False, f"Meeting {m_id} is not scheduled in contiguous time slots fitting its duration."
+
         # Check if all participants are available at the scheduled time
         for p_id, participant in instance['participants'].items():
             if m_id in participant['meetings']:
-                if not all(slot in participant['available_slots'] for slot in range(scheduled_slot, scheduled_slot + duration)):
+                if not all(slot in participant['available_slots'] for slot in scheduled_slots):
                     return False, f"Participant {p_id} is not available for meeting {m_id} at the scheduled time."
-    
+
     # Check if any participant is double-booked
     participants_schedule = {p_id: [] for p_id in instance['participants']}
-    for m_id, time_slot in solution.items():
+    for m_id, time_slots in solution.items():
         duration = next(meeting['duration'] for meeting in instance['meetings'] if meeting['id'] == m_id)
+        if len(time_slots) != duration:
+            return False, f"Meeting {m_id} duration does not match the number of scheduled time slots."
         for p_id, participant in instance['participants'].items():
             if m_id in participant['meetings']:
-                participants_schedule[p_id].extend(range(time_slot, time_slot + duration))
-    
+                participants_schedule[p_id].extend(time_slots)
+
     for p_id, slots in participants_schedule.items():
         if len(slots) != len(set(slots)):
             return False, f"Participant {p_id} is double-booked."
-    
+
     return True, "The solution is valid."
 
 # Example usage:
 # Define an example MSP instance
-# Need to figure out how to deal with each timeslots's duration
+# Need to figure out how to deal with each timeslot's duration
 msp_instance = {
     'meetings': [
         {'id': 0, 'duration': 2},
@@ -151,11 +162,12 @@ msp_instance = {
     'complexity_level': 1
 }
 
-# # Define a solution for the MSP instance
-# msp_solution = {
-#     0: 0,  # Meeting 0 scheduled at time slot 0
-#     1: 3   # Meeting 1 scheduled at time slot 3
-# }
+# Define a solution for the MSP instance
+# meeting : list of slots
+msp_solution = {
+    0: [1,2],  # Meeting 0 scheduled at time slot 0
+    1: [3]   # Meeting 1 scheduled at time slot 3
+}
 
 # # Validate the solution
 # is_valid, message = mspCheck(msp_instance, msp_solution)
@@ -200,18 +212,18 @@ def greedy_tsp(distance_matrix):
 
 # # Assuming distance_matrix is a 2D numpy array representing the distances
 # # Replace this with your actual distance matrix
-distance_matrix = np.array([
-    [0, 2, 9, 10],
-    [1, 0, 6, 4],
-    [15, 7, 0, 8],
-    [6, 3, 12, 0]
-])
+# distance_matrix = np.array([
+#     [0, 2, 9, 10],
+#     [1, 0, 6, 4],
+#     [15, 7, 0, 8],
+#     [6, 3, 12, 0]
+# ])
 
 # tour, total_distance = greedy_tsp(distance_matrix)
 # print(f"The greedy TSP tour: {tour}")
 # print(f"Total distance of the greedy TSP tour: {total_distance}")
 
-def tspCheck(tour_string, distance_matrix):
+def tspCheck(distance_matrix, tour_string):
     """
     Check if the TSP solution is complete and if the distance matches the greedy solution.
     
@@ -219,7 +231,11 @@ def tspCheck(tour_string, distance_matrix):
     :param distance_matrix: 2D numpy array representing the distances between cities
     :return: Boolean indicating whether the tour is complete and matches the greedy distance
     """
+    # convert distance_matrix to numpy array
+    distance_matrix = np.array(distance_matrix) 
+
     # Convert the tour string to a list of integers
+    tour_string = ast.literal_eval(tour_string)['Answer']
     tour = list(map(int, tour_string.split('->')))
     
     # Check if tour is a cycle
@@ -227,7 +243,7 @@ def tspCheck(tour_string, distance_matrix):
         return False, "The tour must start and end at the same city."
 
     # Check if all cities are visited
-    if len(set(tour)) != len(distance_matrix) + 1:
+    if len(tour) != len(distance_matrix) + 1:
         return False, "The tour does not visit all cities exactly once."
 
     # Calculate the distance of the provided tour

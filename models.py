@@ -31,6 +31,7 @@ claude_client = anthropic.Anthropic(api_key=anthropic_key)
 def model_loop(model):
     pass
 
+### Run Models
 # GPT models (GPT-3.5 and GPT-4)
 def run_gpt(text_prompt, max_tokens_to_sample: int = 500, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
     # use gpt-3.5-turbo unless specify gpt-4

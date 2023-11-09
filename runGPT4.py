@@ -22,10 +22,11 @@ def load_data(catgeory):
             for file_num in range(10):
                 #df = pd.read_csv(data_path+"synthesized_data_TSP_level_{}_instance_{}.csv".format(file_num,file_num+1))
                 # read np arrary
-                df = pd.read_csv(data_path+"synthesized_data_TSP_level_{}_instance_{}.csv".format(level,file_num+1))
-                data = df.to_numpy()
+                df = pd.read_csv(data_path+"synthesized_data_TSP_level_{}_instance_{}.csv".format(level,file_num+1),
+                                 header=None, 
+                                 index_col=False)
                 # transform df to 
-                all_data.append(data)
+                all_data.append(df)
         return all_data
     elif catgeory == 'msp':
         data_path = '../Data/MSP/'
@@ -52,58 +53,63 @@ def runGCP(q, p=gcpPrompts): # q is the data for the HP-hard question, p is the 
     output = run_gpt(prompt_text,model = "gpt-4")
     return output
 
-# run TSP - to convert
+# run TSP
 def runTSP(q, p=tspPrompts): # q is the data for the HP-hard question, p is the prompt
-    number_of_vertices = q.shape[0]
+    total_cities = q.shape[0]
     prompt_text = p['Intro'] + '\n' \
-        + p['Initial_question'].format(max_vertices=number_of_vertices) + '\n' \
+        + p['Initial_question'].format(total_cities=total_cities) + '\n' \
         + p['Output_content'] + '\n' \
         + p['Option_no_reasoning'] + \
-        '\n The graph is below: \n'
-    for i in range(number_of_vertices):
-        for j in range(number_of_vertices):
-            if q[i,j] > 0:
-                this_line = "Vertex {} is connected to vertex {} with distance {}.".format(i,j,q[i,j])
+        '\n The distances between cities are below: \n'
+    for i in range(q.shape[0]):
+        for j in range(q.shape[1]):
+            if i < j: # only use the upper triangle
+                this_line = "The path between City {} and City {} is with distance {}.".format(i,j,q.iloc[i,j])
                 prompt_text += this_line + '\n'
     output = run_gpt(prompt_text,model = "gpt-4")
     return output
 
-# run MSP - to convert
+# run MSP
 def runMSP(q, p=mspPrompts): # q is the data for the HP-hard question, p is the prompt
-    number_of_vertices = q.shape[0]
+    total_participants = q['participants']
+    total_timeslots = q['time_slots']
     prompt_text = p['Intro'] + '\n' \
-        + p['Initial_question'].format(max_vertices=number_of_vertices) + '\n' \
+        + p['Initial_question'].format(total_participants=total_participants,total_timeslots=total_timeslots) + '\n' \
         + p['Output_content'] + '\n' \
         + p['Option_no_reasoning'] + \
-        '\n The graph is below: \n'
-    for i in range(number_of_vertices):
-        for j in range(number_of_vertices):
-            if q[i,j] > 0:
-                this_line = "Vertex {} is connected to vertex {} with distance {}.".format(i,j,q[i,j])
-                prompt_text += this_line + '\n'
+        '\n The meetings and participants details are as below: \n'
+    meetings = q['meetings']
+    participants = q['participants']
+    for meeting in meetings:
+        this_line = "Meeting {} is with duration {}.".format(meeting['id'],meeting['duration'])
+        prompt_text += this_line + '\n'
+    for j in participants.keys():
+        this_line = "Participant {} is available at time slots {} and has meetings {}.".format(j,participants[j]['available_slots'],participants[j]['meetings'])
+        prompt_text += this_line + '\n'
+    print(prompt_text)
     output = run_gpt(prompt_text,model = "gpt-4")
     return output
 
 if __name__ == '__main__':
-    # test runGCP
-    gcpData = load_data('gcp')
-    for q in gcpData[:10]:
-        output = runGCP(q)
-        print(output)
-        print(gcpCheck(q,output))
+    # # test runGCP
+    # gcpData = load_data('gcp')
+    # for q in gcpData[:10]:
+    #     output = runGCP(q)
+    #     print(output)
+    #     print(gcpCheck(q,output))
     
-    # # test runTSP
+    # test runTSP
     # tspData = load_data('tsp')
-    # for q in tspData[:1]:
+    # for q in tspData[:10]:
     #     print(q)
-    #     # output = runTSP(q)
-    #     # print(output)
-    #     # print(tspCheck(q,output))
+    #     output = runTSP(q)
+    #     print("Output:\n",output)
+    #     print("Check:\n",tspCheck(q,output))
     
     # # test runMSP
-    # mspData = load_data('msp')
-    # for q in mspData[:1]:
-    #     print(q)
-    #     # output = runMSP(q)
-    #     # print(output)
-    #     # print(mspCheck(q,output))
+    mspData = load_data('msp')
+    for q in mspData[:10]:
+        # print(q)
+        output = runMSP(q)
+        print(output)
+        print(mspCheck(q,output))

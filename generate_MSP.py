@@ -55,6 +55,7 @@ def save_instances_to_json(instances, file_path):
 # num_participants = 1.5 num_meetings （round down）
 # num_time_slots = 2 num_participants
 # for 10 levels
+# TODO: reduce the complexity, 4->2
 complexity_params = [
     (4, 6, 8),  # Level 1
     (5, 7, 10),  # Level 2
