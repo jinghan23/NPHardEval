@@ -1,3 +1,8 @@
+# TODO: add example (few shot) e.g., give fice examples with reasoning.
+# can also add a few shot example for other problems.
+# TODO: add connection to multi-round
+
+
 tspPrompts = {
     "Intro": "The traveling salesman problem (TSP) is a classic optimization problem that aims to find the shortest possible route that visits a set of cities, with each city being visited exactly once and the route returning to the original city.",
     "Initial_question": "You must find the shortest path that visits all {total_cities} cities, labelled from 1 to {total_cities}. The distances between each pair of cities are provided.",

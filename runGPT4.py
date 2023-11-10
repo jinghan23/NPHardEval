@@ -91,26 +91,48 @@ def runMSP(q, p=mspPrompts): # q is the data for the HP-hard question, p is the 
     return output
 
 if __name__ == '__main__':
-    # # test runGCP
-    # gcpData = load_data('gcp')
-    # for q in gcpData[:10]:
-    #     output = runGCP(q)
-    #     print(output)
-    #     print(gcpCheck(q,output))
+    RESULT_PATH = '../Results/'
+
+    ### runGCP
+    # load data
+    gcpData = load_data('gcp')
+    gcpResults = []
+    for q in gcpData[:10]:
+        output_dict = {}
+        output = runGCP(q)
+        output_dict['output'] = output
+        correctness = gcpCheck(q,output)
+        output_dict['correctness'] = correctness
+        gcpResults.append(output_dict)
+    # save the results
+    with open(RESULT_PATH+'gcpResults.json', 'a') as f:
+        f.write(json.dumps(gcpResults) + '\n')
     
     # test runTSP
-    # tspData = load_data('tsp')
-    # for q in tspData[:10]:
-    #     print(q)
-    #     output = runTSP(q)
-    #     print("Output:\n",output)
-    #     print("Check:\n",tspCheck(q,output))
+    tspData = load_data('tsp')
+    tspResults = []
+    for q in tspData[:10]:
+        output_dict = {}
+        output = runTSP(q)
+        output_dict['output'] = output
+        correctness = tspCheck(q,output)
+        output_dict['correctness'] = correctness
+        tspResults.append(output_dict)
+    # save the results
+    with open(RESULT_PATH+'tspResults.json', 'a') as f:
+        f.write(json.dumps(tspResults) + '\n')
+
     
-    # # test runMSP
+    # test runMSP
     mspData = load_data('msp')
+    mspResults = []
     for q in mspData[:10]:
-        # print(q)
-        print("====================\n====================\n====================\n")
+        output_dict = {}
         output = runMSP(q)
-        print(output)
-        print(mspCheck(q,output))
+        output_dict['output'] = output
+        correctness = mspCheck(q,output)
+        output_dict['correctness'] = correctness
+        mspResults.append(output_dict)
+    # save the results
+    with open(RESULT_PATH+'mspResults.json', 'a') as f:
+        f.write(json.dumps(mspResults) + '\n')
