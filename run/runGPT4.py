@@ -1,6 +1,6 @@
 from models import run_gpt
 from prompts import gcpPrompts, tspPrompts, mspPrompts
-from check import gcpCheck, tspCheck, mspCheck
+from old_scripts.check import gcpCheck, tspCheck, mspCheck
 import os
 import pandas as pd
 import numpy as np

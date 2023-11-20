@@ -1,0 +1,1 @@
+Can the graph be colored with 3 colors without any adjacent vertices having the same color?

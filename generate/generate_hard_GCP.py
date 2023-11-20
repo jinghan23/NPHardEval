@@ -7,7 +7,6 @@ Check if the generated graph is planar.
 Check if the graph is isomorphic to a previously generated one.
 If both conditions are satisfied, calculate the chromatic number of the graph.
 Convert the graph to the DIMACS format, appending a comment with the chromatic number.
-Repeat the process until 100 instances with an average of 24 edges each are generated.
 '''
 
 import os

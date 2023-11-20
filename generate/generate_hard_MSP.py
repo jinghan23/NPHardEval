@@ -4,10 +4,14 @@ The generate_msp_instances function generates multiple instances, using a list o
 The save_instances_to_json function saves all generated instances to a JSON file for later use.
 '''
 
+import os
 import random
 import json
 
 DATA_PATH = '../Data/MSP/'
+
+# Create a directory for data if it doesn't exist
+os.makedirs(DATA_PATH, exist_ok=True)
 
 # Function to generate random meetings, participants, and time slots
 def generate_msp_instance(num_meetings, num_participants, num_time_slots, complexity_level):
