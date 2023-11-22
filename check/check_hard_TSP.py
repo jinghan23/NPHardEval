@@ -47,7 +47,20 @@ def greedy_tsp(distance_matrix):
 # print(f"The greedy TSP tour: {tour}")
 # print(f"Total distance of the greedy TSP tour: {total_distance}")
 
-def tspCheck(distance_matrix, tour_string):
+import xml.etree.ElementTree as ET
+def parse_xml_to_dict(xml_string):
+    # Parse the XML string
+    root = ET.fromstring(xml_string)
+
+    # Find the 'final_answer' tag
+    final_answer_element = root.find('final_answer')
+
+    # Find the 'reasoning' tag
+    reasoning_element = root.find('reasoning')
+
+    return final_answer_element, reasoning_element
+
+def tspCheck(distance_matrix, llm_string):
     """
     Check if the TSP solution is complete and if the distance matches the greedy solution.
     
@@ -59,8 +72,12 @@ def tspCheck(distance_matrix, tour_string):
     distance_matrix = np.array(distance_matrix) 
 
     # Convert the tour string to a list of integers
-    tour_string = ast.literal_eval(tour_string)['Answer']
+    # print(llm_string)
+    final_answer_element, reasoning_element = parse_xml_to_dict(llm_string)
+    tour_string = ast.literal_eval(final_answer_element.text)['Path']
     tour = list(map(int, tour_string.split('->')))
+    # we could also prinpt `reasoning_element` to see the reasoning of the answer
+    # we could also print the final distance of the tour by `final_answer_element['Distance']`
     
     # Check if tour is a cycle
     if tour[0] != tour[-1]:

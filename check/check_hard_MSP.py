@@ -1,7 +1,20 @@
 import ast
 
+import xml.etree.ElementTree as ET
+def parse_xml_to_dict(xml_string):
+    # Parse the XML string
+    root = ET.fromstring(xml_string)
+
+    # Find the 'final_answer' tag
+    final_answer_element = root.find('final_answer')
+
+    # Find the 'reasoning' tag
+    reasoning_element = root.find('reasoning')
+
+    return final_answer_element, reasoning_element
+
 # MSP
-def mspCheck(instance, solution):
+def mspCheck(instance, llm_string):
     """
     Validate the MSP solution.
 
@@ -13,9 +26,13 @@ def mspCheck(instance, solution):
     - A tuple (is_valid, message). is_valid is True if the solution is valid, False otherwise.
       message contains information about the validity of the solution.
     """
+    # print(llm_string)
+    solution, reasoning_element = parse_xml_to_dict(llm_string)
+    # print(solution.text)
+
     # convert solution to dictionary
-    solution = ast.literal_eval(solution)["Answer"]
-    # change string key to integer key
+    solution = ast.literal_eval(solution.text)
+    # convert key type to int
     solution = {int(k):v for k,v in solution.items()}
 
     # Check if all meetings are scheduled within the available time slots
@@ -62,29 +79,29 @@ def mspCheck(instance, solution):
 
     return True, "The solution is valid."
 
-# Example usage:
-# Define an example MSP instance
-# Need to figure out how to deal with each timeslot's duration
-msp_instance = {
-    'meetings': [
-        {'id': 0, 'duration': 2},
-        {'id': 1, 'duration': 1}
-    ],
-    'participants': {
-        0: {'available_slots': [0, 1, 2, 3], 'meetings': [0]},
-        1: {'available_slots': [1, 2, 3, 4], 'meetings': [0, 1]}
-    },
-    'time_slots': 5,
-    'complexity_level': 1
-}
-
-# Define a solution for the MSP instance
-# meeting : list of slots
-# msp_solution = {
-#     0: [1,2],  # Meeting 0 scheduled at time slot 0
-#     1: [3]   # Meeting 1 scheduled at time slot 3
+# # Example usage:
+# # Define an example MSP instance
+# # Need to figure out how to deal with each timeslot's duration
+# msp_instance = {
+#     'meetings': [
+#         {'id': 0, 'duration': 2},
+#         {'id': 1, 'duration': 1}
+#     ],
+#     'participants': {
+#         0: {'available_slots': [0, 1, 2, 3], 'meetings': [0]},
+#         1: {'available_slots': [1, 2, 3, 4], 'meetings': [0, 1]}
+#     },
+#     'time_slots': 5,
+#     'complexity_level': 1
 # }
 
-# # Validate the solution
-# is_valid, message = mspCheck(msp_instance, msp_solution)
-# print(is_valid, message)
+# # Define a solution for the MSP instance
+# # meeting : list of slots
+# # msp_solution = {
+# #     0: [1,2],  # Meeting 0 scheduled at time slot 0
+# #     1: [3]   # Meeting 1 scheduled at time slot 3
+# # }
+
+# # # Validate the solution
+# # is_valid, message = mspCheck(msp_instance, msp_solution)
+# # print(is_valid, message)

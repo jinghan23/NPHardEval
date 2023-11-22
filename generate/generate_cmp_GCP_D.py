@@ -1,30 +1,64 @@
-import networkx as nx
-import random
 import os
+import grinpy as gp
+import networkx as nx
+from itertools import combinations
 
-DATA_PATH = '../Data/GCP-D/'
-
-# Create a directory for data if it doesn't exist
+DATA_PATH = '../Data/GCP_Decision/'
 os.makedirs(DATA_PATH, exist_ok=True)
 
-# Function to generate a random graph
-def generate_graph(n, p):
-    return nx.erdos_renyi_graph(n, p)
+def is_isomorphic_to_any(graph, graph_list):
+    for g in graph_list:
+        if nx.is_isomorphic(graph, g):
+            return True
+    return False
 
-# Function to generate questions
-def generate_questions(num_levels=10, questions_per_level=10):
-    for level in range(1, num_levels + 1):
-        for question in range(1, questions_per_level + 1):
-            n = random.randint(level * 2, level * 3)  # Increasing the number of vertices with level
-            p = random.uniform(0.3, 0.6)  # Edge probability
-            g = generate_graph(n, p)
+def generate_graph(n, p=0.4, previous_graphs=[]):
+    while True:
+        g = nx.erdos_renyi_graph(n, p)
+        if nx.check_planarity(g)[0] and not is_isomorphic_to_any(g, previous_graphs):
+            return g
 
-            # Number of colors for the question, inversely proportional to the level of difficulty
-            num_colors = max(3, int((num_levels - level) / num_levels * n / 2))
+def graph_to_dimacs(g, k_colors):
+    can_be_colored = gp.is_k_colorable(g, k_colors)
+    colorable_text = "YES" if can_be_colored else "NO"
+    lines = []
+    lines.append(f"c This graph can be colored with {k_colors} colors: {colorable_text}")
+    lines.append("p edge {} {}".format(g.number_of_nodes(), g.number_of_edges()))
+    for u, v in g.edges():
+        lines.append("e {} {}".format(u + 1, v + 1))
+    return "\n".join(lines)
 
-            # Save the graph and the question
-            nx.write_adjlist(g, f"{DATA_PATH}graph_level_{level}_q_{question}.adjlist")
-            with open(f"{DATA_PATH}question_level_{level}_q_{question}.txt", "w") as file:
-                file.write(f"Can the graph be colored with {num_colors} colors without any adjacent vertices having the same color?")
+def generate_instances(avg_edges_list, node_counts_list, num_instances_per_level, num_complexity_levels, k_colors):
+    print("There are {} instances per level".format(num_instances_per_level))
 
-generate_questions()
+    for i in range(num_complexity_levels):
+        print("Generating instances for level {}".format(i))
+        graphs = []
+        dimacs_outputs = []
+
+        avg_edges = avg_edges_list[i]
+        node_counts = node_counts_list[i]
+
+        j = 0
+        while(j < num_instances_per_level):
+            j += 1
+
+            for n in node_counts:
+                potential_g = generate_graph(n, previous_graphs=graphs)
+                if abs(potential_g.number_of_edges() - avg_edges) < n/2:
+                    graphs.append(potential_g)
+                    dimacs_outputs.append(graph_to_dimacs(potential_g, k_colors))
+                    break
+                else:
+                    j -= 1
+
+        with open(DATA_PATH+'decision_data_GCP_'+str(i)+'.txt', 'w') as file:
+            for output in dimacs_outputs[:num_instances_per_level]:
+                file.write(output + '\n\n')
+
+num_instances_per_level = 10
+num_complexity_levels = 10
+avg_edges_list = [6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
+node_counts_list = [range(6,7), range(7,8), range(8,9), range(9,10), range(10,11), range(11,12), range(12,13), range(13,14), range(14,15), range(15,16)]
+k_colors = 3  # Specify the target number of colors here
+generate_instances(avg_edges_list, node_counts_list, num_instances_per_level, num_complexity_levels, k_colors)

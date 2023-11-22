@@ -1,15 +1,12 @@
-# GCP
+import ast
+
 def read_dimacs_format(dimacs_str):
     lines = dimacs_str.strip().split('\n')
-    # Read the number of vertices and edges
     p_line = next(line for line in lines if line.startswith('p'))
     _, _, num_vertices, num_edges = p_line.split()
     num_vertices, num_edges = int(num_vertices), int(num_edges)
 
-    # Create adjacency list
     adjacency_list = {i: set() for i in range(1, num_vertices + 1)}
-
-    # Read the edges and ignore those that reference non-existing vertices
     for line in lines:
         if line.startswith('e'):
             _, vertex1, vertex2 = line.split()
@@ -20,17 +17,7 @@ def read_dimacs_format(dimacs_str):
 
     return num_vertices, adjacency_list
 
-
-import ast
 def parse_answer(answer_str):
-    # # Convert the answer string to a dictionary
-    # answer_dict = {}
-    # # Remove the braces and split the string by commas
-    # entries = answer_str.strip("}{").split(', ')
-    # for entry in entries:
-    #     vertex, color = entry.split(':')
-    #     answer_dict[int(vertex)] = color
-    # return answer_dict
     all_answers = ast.literal_eval(answer_str)['Answer']
     answer_dict = {}
     for pair in all_answers:
@@ -38,21 +25,23 @@ def parse_answer(answer_str):
         answer_dict[int(vertex)] = color
     return answer_dict
 
-
-def gcpCheck(dimacs_str, answer_str):
+def gcp_decision_check(dimacs_str, answer_str, k_colors):
     num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
     answer_colors = parse_answer(answer_str)
-    print(adjacency_list)
-    print(answer_colors)
 
-    # Check if all colors in the answer are valid
+    # Check if the coloring uses no more than k_colors
+    if len(set(answer_colors.values())) > k_colors:
+        print(f"Invalid coloring: More than {k_colors} colors used.")
+        return False
+
+    # Check if adjacent vertices have different colors
     for vertex, neighbors in adjacency_list.items():
         for neighbor in neighbors:
             if answer_colors[vertex] == answer_colors[neighbor]:
                 print(f"Invalid coloring: Vertex {vertex} and {neighbor} have the same color.")
                 return False
 
-    print(f"Valid coloring found with {len(set(answer_colors.values()))} colors: {answer_colors}")
+    print("Valid coloring found.")
     return True
 
 # # Example usage:
@@ -81,6 +70,6 @@ def gcpCheck(dimacs_str, answer_str):
 # e 12 16
 # """
 # answer_str = "{'Answer': ['1:A', '2:B', '3:C', '4:B', '5:C', '6:A', '7:C', '8:B', '9:A', '10:A', '11:B', '12:B', '13:C', '14:A']}"
+# k_colors = 3  # The target number of colors
 
-# # Call the function with the example input
-# gcpCheck(dimacs_format_str, answer_str)
+# gcp_decision_check(dimacs_format_str, answer_str, k_colors)

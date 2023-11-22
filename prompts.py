@@ -36,7 +36,7 @@ bspPrompts = {
 }
 
 # NP-complete problems
-tspdPrompts = {
+tsp_dPrompts = {
     "Intro": "",
     "Initial_question": "",
     "Output_content": "",
@@ -45,7 +45,7 @@ tspdPrompts = {
     "Few_shot_others": ""
 }
 
-gcpdPrompts = {
+gcp_dPrompts = {
     "Intro": "",
     "Initial_question": "",
     "Output_content": "",
@@ -64,29 +64,29 @@ kspPrompts = {
 }
 
 # NP-hard problems
-tspoPrompts = {
+tspPrompts = {
     "Intro": "The traveling salesman problem (TSP) is a classic optimization problem that aims to find the shortest possible route that visits a set of cities, with each city being visited exactly once and the route returning to the original city.",
     "Initial_question": "You must find the shortest path that visits all {total_cities} cities, labelled from 1 to {total_cities}. The distances between each pair of cities are provided.",
-    "Output_content": "Please list each city in the order they are visited. Provide the total distance of the trip. You should also provide your step by step reasoning.",
-    "Output_format": "Your output should contain two parts. First, your step by step reasoning wraped by <reasoning></reasoning>. Second, the final output of the result path and total distance wrapped by final_answer tag, like <final_answer>{'Path': '0->1->2->...->N->0', 'TotalDistance': INT_TOTAL_DISTANCE}</final_answer>",
+    "Output_content": "Please list each city in the order they are visited. Provide the total distance of the trip. You should also provide very short step by step reasoning. Do not use multiple lines and try your best to save output tokens.",
+    "Output_format": "Your output should contain two parts enclosed by <root></root>. First, your step by step reasoning like <reasoning>The reasoning process</reasoning>. Second, the final output of the result path and total distance wrapped by final_answer tag, like <final_answer>{'Path': '0->1->2->...->N->0', 'TotalDistance': 'INT_TOTAL_DISTANCE'}</final_answer>",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
-gcpoPrompts = {
+gcpPrompts = {
     "Intro":"Graph coloring refers to the problem of coloring vertices of a graph in such a way that no two adjacent vertices have the same color. ",
     "Initial_question":"There are {max_vertices} vertices 1 to {max_vertices} in a graph. You may use {max_colors} colors with alphabats from A, B, C,... to color the graph.",
-    "Output_content":"Please label every vertex, even if it is disconnected from the rest of the graph. Please provide each vertex's color. Do not skip any vertices. You should also provide your short step by step reasoning.",
-    "Option_with_reasoning":" Your output should contain two parts. First, your step by step reasoning wraped by <reasoning></reasoning>. Second, the final output of all vertex numbers and their associated colors, wrapped by final_answer tag, like <final_answer>{0:'COLOR_1', 1:'COLOR_2', ...}</final_answer>.",
+    "Output_content":"Please label every vertex, even if it is disconnected from the rest of the graph. Please provide each vertex's color. Do not skip any vertices. You should also provide very short step by step reasoning. Do not use multiple lines and try your best to save output tokens.",
+    "Output_format":"Your output should contain two parts enclosed by <root></root>. First, your step by step reasoning wraped by <reasoning></reasoning>. Second, the final output of all vertex numbers and their associated colors, wrapped by final_answer tag, like <final_answer>{0:'COLOR_1', 1:'COLOR_2', ...}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
-mspoPrompts = {
+mspPrompts = {
     "Intro": "The meeting scheduling problem (MSP) is a type of constraint satisfaction problem where the goal is to find a suitable time slot for a meeting that all participants can attend without conflicts in their schedules.",
     "Initial_question": "There are {total_participants} participants with their available time slots. There are {total_timeslots} consecutive non-overlapping time slots. Let's assume all meetings has duration of 1.", 
-    "Output_content": "Please provide a time slot where all participants can attend the meeting. You should also provide your step by step reasoning.",
-    "Option_with_reasoning": "Your output should contain two parts. First, your step by step reasoning wraped by <reasoning></reasoning>. Second, the final output of meeting numbers followed by a list of slots, like <final_answer>{0:[1,2], 1:[4], ...}</final_answer>.",
+    "Output_content": "Please provide a time slot where all participants can attend the meeting. You should also provide very short step by step reasoning. Do not use multiple lines and try your best to save output tokens.",
+    "Output_format": "Your output should contain two parts enclosed by <root></root>. First, your step by step reasoning wraped by <reasoning></reasoning>. Second, the final output of meeting numbers followed by a list of slots, like <final_answer>{0:[1,2], 1:[4], ...}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
