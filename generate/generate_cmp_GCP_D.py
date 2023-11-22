@@ -19,10 +19,10 @@ def generate_graph(n, p=0.4, previous_graphs=[]):
             return g
 
 def graph_to_dimacs(g, k_colors):
-    can_be_colored = gp.is_k_colorable(g, k_colors)
-    colorable_text = "YES" if can_be_colored else "NO"
+    # can_be_colored = gp.is_k_colorable(g, k_colors)
+    # colorable_text = "YES" if can_be_colored else "NO"
     lines = []
-    lines.append(f"c This graph can be colored with {k_colors} colors: {colorable_text}")
+    lines.append(f"c This graph can be colored with {k_colors} colors")
     lines.append("p edge {} {}".format(g.number_of_nodes(), g.number_of_edges()))
     for u, v in g.edges():
         lines.append("e {} {}".format(u + 1, v + 1))

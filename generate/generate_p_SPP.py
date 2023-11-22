@@ -57,8 +57,8 @@ complexity_params = [
     (8, 9, 10),  # Level 5
     (9, 10, 11),  # Level 6
     (10, 11, 12),  # Level 7
-    (11, 12, 13)  # Level 8
-    (12, 13, 14)  # Level 9
+    (11, 12, 13),  # Level 8
+    (12, 13, 14),  # Level 9
     (13, 14, 15)  # Level 10
 ]
 
