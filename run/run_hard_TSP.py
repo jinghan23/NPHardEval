@@ -10,10 +10,25 @@ import pandas as pd
 import numpy as np
 import json
 
+import argparse
+
+# Create the parser
+parser = argparse.ArgumentParser(description='Run model script')
+
+# Add an argument for the model name
+parser.add_argument('model', type=str, help='The name of the model to run')
+
+# Parse the argument
+args = parser.parse_args()
+
+# Your script's logic here, using args.model as the model name
+MODEL = args.model
+
+# MODEL = 'gpt-4-1106-preview'
+# # models: gpt-4-1106-preview, gpt-3.5-turbo-1106, claude-2, claude-instant, palm-2
+
 DATA_PATH = '../Data/TSP/'
 RESULT_PATH = '../Results/'
-MODEL = 'gpt-4-1106-preview'
-# others: gpt-3.5-turbo-1106, claude-2, claude-instant, palm-2
 
 def load_data():
     data_path = DATA_PATH
@@ -43,19 +58,43 @@ def runTSP(q, p=tspPrompts): # q is the data for the HP-hard question, p is the 
                 prompt_text += this_line + '\n'
     output = run_gpt(prompt_text,model = MODEL)
     # remove \n in the output
-    output = output.replace('\n','')
+
+    # get output
+    if 'gpt' in MODEL:
+        output = run_gpt(prompt_text,model = MODEL)
+    elif 'claude' in MODEL:
+        output = run_claude(text_prompt=prompt_text,model = MODEL)
+    else:
+        # raise error
+        print('Model not found')
     return output
 
 if __name__ == '__main__':
     tspData = load_data()
+    print(len(tspData))
     tspResults = []
-    for q in tspData[:10]:
+
+    MAX_TRY = 10 # updated MAX_TRY
+    for q in tspData:
         output_dict = {}
-        output = runTSP(q)
-        output_dict['output'] = output
-        correctness = tspCheck(q,output)
-        output_dict['correctness'] = correctness
-        tspResults.append(output_dict)
+        num_try = 0
+        while num_try < MAX_TRY:
+            try:
+                output = runTSP(q)
+                print(q)
+                print(output)
+                output_dict['output'] = output
+                output_dict['correctness'] = tspCheck(q, output)
+                break
+            except Exception as e:
+                print(f"Attempt {num_try+1} failed: {e}")
+                num_try += 1
+        if output_dict:
+            tspResults.append(output_dict)
+        else:
+            print(f"Failed to run {q}")
+            tspResults.append({'output': '', 'correctness': False})
+
     # save the results
     with open(RESULT_PATH+MODEL+'_'+'tspResults.json', 'a') as f:
         f.write(json.dumps(tspResults) + '\n')

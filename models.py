@@ -31,7 +31,7 @@ with open('../../secrets.txt') as f:
     for line in lines:
         if line.split(',')[0].strip() == "open_ai_key":
             open_ai_key = line.split(',')[1].strip()
-        elif line.split(',')[0].strip() == "anthropic_key":
+        if line.split(',')[0].strip() == "anthropic_key":
             anthropic_key = line.split(',')[1].strip()
 
 openai_client = OpenAI(api_key=open_ai_key)
@@ -39,7 +39,7 @@ claude_client = anthropic.Anthropic(api_key=anthropic_key)
 
 ### Run Models
 # GPT models (GPT-3.5 and GPT-4)
-def run_gpt(text_prompt, max_tokens_to_sample: int = 500, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
+def run_gpt(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
     # use gpt-3.5-turbo unless specify gpt-4
     response = client.chat.completions.create(
       model = model, 
@@ -53,7 +53,7 @@ def run_gpt(text_prompt, max_tokens_to_sample: int = 500, temperature: float = 0
 
 
 # Claude 2 models (Claude 2 and Claude 2 Instant)
-def run_claude(api_key, text_prompt, max_tokens_to_sample: int = 500, temperature: float = 0, client=claude_client, model = "claude-instant"):
+def run_claude(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 0, client=claude_client, model = "claude-instant-1.2"):
     # use claude-instant unless specify claude-2
     prompt = f"{anthropic.HUMAN_PROMPT} {text_prompt}{anthropic.AI_PROMPT}"
     resp = client.completions.create(
@@ -64,7 +64,6 @@ def run_claude(api_key, text_prompt, max_tokens_to_sample: int = 500, temperatur
         temperature=temperature,
     ).completion
     return resp
-
 
 # PaLM 2 model
 class GooglePaLM():
@@ -108,16 +107,79 @@ class GooglePaLM():
 
 '''
 Open-source models (choose from below, in total 5 models)
-- LlaMa 2
-- Mistral-7b
-- Yi-34b
+
+- [v] Vicuna
+- [v] Mistral-7b
+- [v] Yi-34b
+- [v] Phi
+- [v] baichuan
 - Falcon
 - Fuyu
-- Baichuan
+- LlaMa 2
 - LLaMa 1
-- Vicuna
 - Alpaca
 - UltraLM
 '''
 
-# TODO: add open-source models
+# from vllm import LLM, SamplingParams
+
+# # TODO: add open-source models
+# def run_mistral(text_prompt):
+#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
+#     llm = LLM(
+#         model='mistralai/Mistral-7B-Instruct-v0.1',
+#         tensor_parallel_size=4, 
+#         max_num_seqs=4,
+#         max_num_batched_tokens=4 * 4096,
+#     )
+#     predictions = llm.generate(text_prompt, sampling_params)
+#     return predictions
+
+# def run_yi(text_prompt):
+#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
+#     llm = LLM(
+#         model='yi-ai/llm-yi-34b',
+#         tensor_parallel_size=4, 
+#         max_num_seqs=4,
+#         max_num_batched_tokens=4 * 4096,
+#     )
+#     predictions = llm.generate(text_prompt, sampling_params)
+#     return predictions
+
+# def run_vicuna(text_prompt):
+#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
+#     llm = LLM(
+#         model='lmsys/vicuna-13b-v1.3',
+#         tensor_parallel_size=4, 
+#         max_num_seqs=4,
+#         max_num_batched_tokens=4 * 4096,
+#     )
+#     predictions = llm.generate(text_prompt, sampling_params)
+#     return predictions
+
+# def run_phi(text_prompt):
+#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
+#     llm = LLM(
+#         model='microsoft/phi-1_5',
+#         tensor_parallel_size=4, 
+#         max_num_seqs=4,
+#         max_num_batched_tokens=4 * 4096,
+#     )
+#     predictions = llm.generate(text_prompt, sampling_params)
+#     return predictions
+
+# def run_baichuan(text_prompt):
+#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
+#     llm = LLM(
+#         model='baichuan-inc/Baichuan-13B-Chat',
+#         tensor_parallel_size=4, 
+#         max_num_seqs=4,
+#         max_num_batched_tokens=4 * 4096,
+#     )
+#     predictions = llm.generate(text_prompt, sampling_params)
+#     return predictions
+
+if __name__ == '__main__':
+    # try claude2-instant
+    resp = run_claude(text_prompt= "I am a human, and I am a", model="claude-instant-1.2") # claude-2 works
+    print(resp)

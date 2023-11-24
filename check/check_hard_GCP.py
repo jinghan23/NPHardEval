@@ -68,8 +68,12 @@ def gcpCheck(dimacs_str, answer_str):
     # Check if all colors in the answer are valid
     for vertex, neighbors in adjacency_list.items():
         for neighbor in neighbors:
-            if answer_colors[vertex] == answer_colors[neighbor]:
-                print(f"Invalid coloring: Vertex {vertex} and {neighbor} have the same color.")
+            try:
+                if answer_colors[vertex] == answer_colors[neighbor]:
+                    print(f"Invalid coloring: Vertex {vertex} and {neighbor} have the same color.")
+                    return False
+            except:
+                print(f"Invalid input.") # dealing with hullucination
                 return False
 
     print(f"Valid coloring found with {len(set(answer_colors.values()))} colors: {answer_colors}")
