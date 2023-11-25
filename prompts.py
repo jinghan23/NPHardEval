@@ -9,56 +9,56 @@
 
 # P problems
 sppPrompts = {
-    "Intro": "",
-    "Initial_question": "",
-    "Output_content": "",
-    "Output_format": "",
+    "Intro": "The Shortest Path Problem (SPP) involves finding the shortest path between two nodes in a weighted graph.",
+    "Initial_question": "You need to find the shortest path between node {start_node} and node {end_node} in a graph. The graph's edges and their weights are given.",
+    "Output_content": "Please provide the shortest path from {start_node} to {end_node} and its total distance. Offer a concise step-by-step explanation of your reasoning process. Aim for brevity and clarity in your response.",
+    "Output_format": "Your output should be enclosed within <root></root> tags. Include your reasoning in <reasoning></reasoning> tags and the final path and total distance in <final_answer></final_answer> tags, like <final_answer>{'Path': 'START->...->END', 'TotalDistance': 'INT_TOTAL_DISTANCE'}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
 mfpPrompts = {
-    "Intro": "",
-    "Initial_question": "",
-    "Output_content": "",
-    "Output_format": "",
+    "Intro": "The Maximum Flow Problem (MFP) seeks to find the maximum possible flow from a source node to a sink node in a flow network, subject to capacity constraints on the edges.",
+    "Initial_question": "Determine the maximum flow from the source node {source_node} to the sink node {sink_node} in the given flow network. The capacities of the edges are provided.",
+    "Output_content": "Please indicate the maximum flow value and the flow for each edge. Provide a brief explanation of your methodology. Keep your response concise and focused.",
+    "Output_format": "Enclose your output within <root></root> tags. Present your reasoning in <reasoning></reasoning> tags and the final maximum flow and edge flows in <final_answer></final_answer> tags, like <final_answer>{'MaxFlow': 'MAX_FLOW_VALUE', 'Flows': {EDGE: FLOW, ...}}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
 bspPrompts = {
-    "Intro": "",
-    "Initial_question": "",
-    "Output_content": "",
-    "Output_format": "",
+    "Intro": "The Binary Search Problem (BSP) deals with finding the position of a target value within a sorted array using a binary search algorithm, which efficiently narrows down the search range.",
+    "Initial_question": "Find the position of the target value {target_value} in the sorted array. The array elements are provided.",
+    "Output_content": "Please identify the position of the target value in the array. Offer a brief, step-by-step account of your search process. Aim for conciseness in your response.",
+    "Output_format": "Your output should be enclosed in <root></root> tags. Include your search process in <reasoning></reasoning> tags and the final position of the target value in <final_answer></final_answer> tags, like <final_answer>{'Position': 'TARGET_POSITION'}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
 # NP-complete problems
 tsp_dPrompts = {
-    "Intro": "",
-    "Initial_question": "",
-    "Output_content": "",
-    "Output_format": "",
+    "Intro": "The Traveling Salesman Problem (Decision Version, TSP-D) focuses on determining if a salesman can complete a route, visiting each city at least once, with the total travel distance being less than a specified value.",
+    "Initial_question": "Check if it's possible for a salesman to visit each of the {total_cities} cities at least once and return to the starting city with the total distance less than {distance_limit}. The distances between each pair of cities are given.",
+    "Output_content": "Provide a yes or no answer, with a succinct explanation of your decision process. Focus on clarity and brevity in your response.",
+    "Output_format": "Enclose your output in <root></root> tags. Present your reasoning in <reasoning></reasoning> tags and the final yes/no answer in <final_answer></final_answer> tags, like <final_answer>{'Feasible': 'YES_OR_NO'}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
 gcp_dPrompts = {
-    "Intro": "",
-    "Initial_question": "",
-    "Output_content": "",
-    "Output_format": "",
+    "Intro": "The Graph Coloring Problem (Decision Version, GCP-D) involves determining if it is possible to color the vertices of a graph using a given number of colors, ensuring no two adjacent vertices have the same color.",
+    "Initial_question": "Find out if the vertices of a graph with {total_vertices} vertices can be colored using only {number_of_colors} colors, such that no adjacent vertices share the same color.",
+    "Output_content": "Provide a yes or no answer, along with a concise explanation of your reasoning. Keep your explanation focused and brief.",
+    "Output_format": "Enclose your output in <root></root> tags. Include your reasoning in <reasoning></reasoning> tags and the final yes/no answer in <final_answer></final_answer> tags, like <final_answer>{'Feasible': 'YES_OR_NO'}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
 kspPrompts = {
-    "Intro": "",
-    "Initial_question": "",
-    "Output_content": "",
-    "Output_format": "",
+    "Intro": "The Knapsack Problem (KSP) asks whether a subset of items, each with a given weight and value, can be chosen to fit into a knapsack of fixed capacity, maximizing the total value without exceeding the capacity.",
+    "Initial_question": "Determine if a subset of items can be selected to fit into a knapsack with a capacity of {knapsack_capacity}, maximizing value without exceeding the capacity. Item weights and values are provided.",
+    "Output_content": "Indicate if an optimal subset exists and its total value. Offer a concise explanation of your selection process. Aim for clarity and brevity in your response.",
+    "Output_format": "Your output should be enclosed within <root></root> tags. Include your selection process in <reasoning></reasoning> tags and the final decision and total value in <final_answer></final_answer> tags, like <final_answer>{'Feasible': 'YES_OR_NO', 'TotalValue': 'TOTAL_VALUE'}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }

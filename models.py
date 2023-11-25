@@ -39,7 +39,7 @@ claude_client = anthropic.Anthropic(api_key=anthropic_key)
 
 ### Run Models
 # GPT models (GPT-3.5 and GPT-4)
-def run_gpt(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
+def run_gpt(text_prompt, max_tokens_to_sample: int = 3000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
     # use gpt-3.5-turbo unless specify gpt-4
     response = client.chat.completions.create(
       model = model, 
@@ -53,7 +53,7 @@ def run_gpt(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 
 
 
 # Claude 2 models (Claude 2 and Claude 2 Instant)
-def run_claude(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 0, client=claude_client, model = "claude-instant-1.2"):
+def run_claude(text_prompt, max_tokens_to_sample: int = 3000, temperature: float = 0, client=claude_client, model = "claude-instant-1.2"):
     # use claude-instant unless specify claude-2
     prompt = f"{anthropic.HUMAN_PROMPT} {text_prompt}{anthropic.AI_PROMPT}"
     resp = client.completions.create(
@@ -181,5 +181,5 @@ Open-source models (choose from below, in total 5 models)
 
 if __name__ == '__main__':
     # try claude2-instant
-    resp = run_claude(text_prompt= "I am a human, and I am a", model="claude-instant-1.2") # claude-2 works
+    resp = run_claude(text_prompt= "I am a human, and I am a", model="claude-2") # claude-2 works claude-instant-1.2
     print(resp)

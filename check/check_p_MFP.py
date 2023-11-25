@@ -1,8 +1,8 @@
 import ast
 import json
 
-# SPP
-def spp_check(instance, solution, start_node, end_node):
+# SPP - TODO: update this, this is completely wrong...
+def mfp_check(instance, solution, start_node, end_node):
     """
     Validate the SPP solution.
 

@@ -22,7 +22,7 @@ parser.add_argument('model', type=str, help='The name of the model to run')
 args = parser.parse_args()
 
 # Your script's logic here, using args.model as the model name
-MODEL = args.model
+MODEL = str(args.model)
 
 # MODEL = 'gpt-4-1106-preview'
 # # models: gpt-4-1106-preview, gpt-3.5-turbo-1106, claude-2, claude-instant, palm-2
@@ -56,7 +56,7 @@ def runTSP(q, p=tspPrompts): # q is the data for the HP-hard question, p is the 
             if i < j: # only use the upper triangle
                 this_line = "The path between City {} and City {} is with distance {}.".format(i,j,q.iloc[i,j])
                 prompt_text += this_line + '\n'
-    output = run_gpt(prompt_text,model = MODEL)
+    # output = run_gpt(prompt_text,model = MODEL)
     # remove \n in the output
 
     # get output
@@ -74,10 +74,14 @@ if __name__ == '__main__':
     print(len(tspData))
     tspResults = []
 
+    print("Using model: {}".format(MODEL))
+
     MAX_TRY = 10 # updated MAX_TRY
     for q in tspData:
         output_dict = {}
         num_try = 0
+        # print(q)
+        # print("_________________________________________________________")
         while num_try < MAX_TRY:
             try:
                 output = runTSP(q)

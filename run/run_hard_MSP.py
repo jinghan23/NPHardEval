@@ -22,7 +22,7 @@ parser.add_argument('model', type=str, help='The name of the model to run')
 args = parser.parse_args()
 
 # Your script's logic here, using args.model as the model name
-MODEL = args.model
+MODEL = str(args.model)
 
 # MODEL = 'gpt-4-1106-preview'
 # # models: gpt-4-1106-preview, gpt-3.5-turbo-1106, claude-2, claude-instant, palm-2
@@ -70,6 +70,8 @@ if __name__ == '__main__':
 
     MAX_TRY = 10 # updated MAX_TRY
     for q in mspData:
+        # print("_________________________________________________________")
+        # print(q)
         output_dict = {}
         num_try = 0
         while num_try < MAX_TRY:
