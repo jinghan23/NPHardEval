@@ -21,14 +21,14 @@ mfpPrompts = {
     "Intro": "The Maximum Flow Problem (MFP) seeks to find the maximum possible flow from a source node to a sink node in a flow network, subject to capacity constraints on the edges.",
     "Initial_question": "Determine the maximum flow from the source node {source_node} to the sink node {sink_node} in the given flow network. The capacities of the edges are provided.",
     "Output_content": "Please indicate the maximum flow value and the flow for each edge. Provide a brief explanation of your methodology. Keep your response concise and focused.",
-    "Output_format": "Enclose your output within <root></root> tags. Present your reasoning in <reasoning></reasoning> tags and the final maximum flow and edge flows in <final_answer></final_answer> tags, like <final_answer>{'MaxFlow': 'MAX_FLOW_VALUE', 'Flows': {EDGE: FLOW, ...}}</final_answer>.",
+    "Output_format": "Enclose your output within <root></root> tags. Present your reasoning in <reasoning></reasoning> tags and the final maximum flow and edge flows in <final_answer></final_answer> tags, like <final_answer>{'MaxFlow': 'MAX_FLOW_VALUE', 'Flows': {'NODE_1->NODE_2': FLOW, ...}}</final_answer>.",
     "Few_shot_self": "",
     "Few_shot_others": ""
 }
 
 bspPrompts = {
     "Intro": "The Binary Search Problem (BSP) deals with finding the position of a target value within a sorted array using a binary search algorithm, which efficiently narrows down the search range.",
-    "Initial_question": "Find the position of the target value {target_value} in the sorted array. The array elements are provided.",
+    "Initial_question": "Find the position of the target value {target_value} in the sorted array. The index begins with 0. The array elements are provided.",
     "Output_content": "Please identify the position of the target value in the array. Offer a brief, step-by-step account of your search process. Aim for conciseness in your response.",
     "Output_format": "Your output should be enclosed in <root></root> tags. Include your search process in <reasoning></reasoning> tags and the final position of the target value in <final_answer></final_answer> tags, like <final_answer>{'Position': 'TARGET_POSITION'}</final_answer>.",
     "Few_shot_self": "",

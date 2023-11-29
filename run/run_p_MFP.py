@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models import *
 from prompts import mfpPrompts
 from check.check_p_MFP import *
+from utils import parse_xml_to_dict
 
 import pandas as pd
 import numpy as np
@@ -33,16 +34,17 @@ def load_data():
     return all_data
 
 def runMFP(q, p=mfpPrompts):
-    source_node = q['source_node']
-    sink_node = q['sink_node']
-    network = q['network']
+    source_node = q['source']
+    sink_node = q['sink']
+
+    edges = q['edges']
     prompt_text = p['Intro'] + '\n' + \
                   p['Initial_question'].format(source_node=source_node, sink_node=sink_node) + '\n' + \
                   p['Output_content'] + '\n' + \
                   p['Output_format'] + \
                   "\n The capacities of the network's edges are as follows: \n"
-    for edge, capacity in network.items():
-        this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {capacity}."
+    for edge in edges:
+        this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {edge['capacity']}."
         prompt_text += this_line + '\n'
 
     if 'gpt' in MODEL:
@@ -67,7 +69,8 @@ if __name__ == '__main__':
         num_try = 0
         while num_try < MAX_TRY:
             try:
-                output = runMFP(q)
+                llm_string = runMFP(q)
+                output = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = mfp_check(q, output)
                 break

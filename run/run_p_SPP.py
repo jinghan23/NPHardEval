@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models import *
 from prompts import sppPrompts
 from check.check_p_SPP import *
+from utils import parse_xml_to_dict
 
 import pandas as pd
 import numpy as np
@@ -33,16 +34,19 @@ def load_data():
     return all_data
 
 def runSPP(q, p=sppPrompts):
-    start_node = q['start_node']
-    end_node = q['end_node']
-    graph = q['graph']
+    # start_node = q['start_node']
+    # end_node = q['end_node']
+    # TO-DO: fix later
+    start_node = q['nodes'][0]
+    end_node = q['nodes'][-1]
+    edges = q['edges']
     prompt_text = p['Intro'] + '\n' + \
                   p['Initial_question'].format(start_node=start_node, end_node=end_node) + '\n' + \
                   p['Output_content'] + '\n' + \
                   p['Output_format'] + \
                   "\n The graph's edges and weights are as follows: \n"
-    for edge, weight in graph.items():
-        this_line = f"Edge from {edge['from']} to {edge['to']} has a weight of {weight}."
+    for edge in edges:
+        this_line = f"Edge from {edge['from']} to {edge['to']} has a weight of {edge['weight']}."
         prompt_text += this_line + '\n'
 
     if 'gpt' in MODEL:
@@ -67,7 +71,8 @@ if __name__ == '__main__':
         num_try = 0
         while num_try < MAX_TRY:
             try:
-                output = runSPP(q)
+                llm_string = runSPP(q)
+                output = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = spp_check(q, output)
                 break

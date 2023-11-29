@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models import *
 from prompts import bspPrompts
 from check.check_p_BSP import *
+from utils import parse_xml_to_dict
 
 import pandas as pd
 import numpy as np
@@ -33,8 +34,9 @@ def load_data():
     return all_data
 
 def runBSP(q, p=bspPrompts):
-    target_value = q['target_value']
-    array = q['array']
+    target_value = q['target']
+    # TO-DO: fix data not being sorted
+    array = sorted(q['array'])
     prompt_text = p['Intro'] + '\n' + \
                   p['Initial_question'].format(target_value=target_value) + '\n' + \
                   p['Output_content'] + '\n' + \
@@ -63,7 +65,8 @@ if __name__ == '__main__':
         num_try = 0
         while num_try < MAX_TRY:
             try:
-                output = runBSP(q)
+                llm_string = runBSP(q)
+                output = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = bsp_check(q, output)
                 break

@@ -1,68 +1,115 @@
-import ast
 import json
+from collections import defaultdict
+import networkx as nx
 
-# SPP - TODO: update this, this is completely wrong...
-def mfp_check(instance, solution, start_node, end_node):
-    """
-    Validate the SPP solution.
 
-    Parameters:
-    - instance: The SPP instance as a dictionary with 'nodes' and 'edges'.
-    - solution: A dictionary with 'path' as a list of nodes representing the path and 'total_cost' as the total cost of the path.
-    - start_node: The starting node of the path.
-    - end_node: The destination node of the path.
+def mfp_optimal_solution(num_nodes, edge_capacities, source, target):
+    """Provides the optimal solution for the MFP instance."""
+    G = nx.Graph()
+    G.add_nodes_from(range(num_nodes))
+    for edge_name, edge_capacity in edge_capacities.items():
+        from_node, to_node = map(int, edge_name.split('->'))
+        G.add_edge(from_node, to_node, weight=edge_capacity)
+    max_flow = None
+    if nx.has_path(G, source=source, target=target):
+        max_flow = nx.maximum_flow_value(G, source, target, capacity='weight')
+    return max_flow
+
+
+def mfp_check(instance, solution):
+    """Validate the solution of the MFP problem.
+
+    Args:
+        instance (dict): The instance of the problem.
+        solution (dict): The solution of the problem.
+        start_node (int): The start node of the problem.
+        end_node (int): The end node of the problem.
 
     Returns:
     - A tuple (is_valid, message). is_valid is True if the solution is valid, False otherwise.
-      message contains information about the validity of the solution.
+        message contains information about the validity of the solution.
     """
+    # Get the start and end nodes
+    # Curently, the start and end nodes are the first and last nodes in the instance
+    num_nodes = instance['nodes']
+    start_node = instance['source']
+    end_node = instance['sink']
+
     # Convert solution to dictionary
-    solution = ast.literal_eval(solution)["Answer"]
-    path = solution.get('path', [])
-    total_cost = solution.get('total_cost', -1)
+    flows = solution.get('Flows', {})
+    max_flow = int(solution.get('MaxFlow', -1))
 
-    # Check if path starts and ends with the correct nodes
-    if not path or path[0] != start_node or path[-1] != end_node:
-        return False, "The path does not start or end at the correct nodes."
+    # Initialize node flows
+    node_flows = [0 for _ in range(num_nodes)]
+    node_flows[start_node] = max_flow
+    node_flows[end_node] = -max_flow
 
-    # Check if the path is continuous and calculate the cost
-    calculated_cost = 0
-    for i in range(len(path) - 1):
-        from_node, to_node = path[i], path[i + 1]
-        edge = next((edge for edge in instance['edges'] if edge['from'] == from_node and edge['to'] == to_node), None)
+    # Initialize edge flows
+    edges = instance['edges']
+    edge_name_func = lambda from_node, to_node: f'{from_node}->{to_node}' if from_node < to_node else f'{to_node}->{from_node}'
+    edge_capacities = defaultdict(int)
+    for edge in edges:
+        edge_name = edge_name_func(edge['from'], edge['to'])
+        edge_capacities[edge_name] += int(edge['capacity'])
+    edge_flows = {edge_name: 0 for edge_name in edge_capacities.keys()}
 
-        if not edge:
-            return False, f"No edge found from node {from_node} to node {to_node}."
+    # Check if the flow is valid
+    for edge, flow in flows.items():
+        flow = int(flow)
+        from_node, to_node = map(int, edge.split('->'))
+        node_flows[from_node] -= flow
+        node_flows[to_node] += flow
+        edge_name = edge_name_func(from_node, to_node)
+        edge_flow = flow
+        if from_node > to_node:
+            edge_flow = -flow
+        if edge_name not in edge_flows:
+            return False, f"Edge {edge} does not exist."
+        edge_flows[edge_name] += edge_flow
 
-        calculated_cost += edge['weight']
+    # Check the node conservation
+    for node_id, node_flow in enumerate(node_flows):
+        if node_flow != 0:
+            return False, f"Node {node_id} is not conserved."
+    
+    # Check the edge capacities
+    for edge_name, edge_flow in edge_flows.items():
+        edge_capacity = edge_capacities[edge_name]
+        if abs(edge_flow) > edge_capacity:
+            return False, f"Edge {edge_name} with {edge_flow} exceeds its capacity {edge_capacity}."
 
-    # Check if the calculated cost matches the total cost provided in the solution
-    if calculated_cost != total_cost:
-        return False, f"The calculated cost ({calculated_cost}) does not match the provided total cost ({total_cost})."
-
+    # Check if the flow is optimal
+    mfp_optimal_flow = mfp_optimal_solution(num_nodes, edge_capacities, start_node, end_node)
+    if mfp_optimal_flow is None:
+        if max_flow >= 0:
+            return False, f"The problem should be infeasible."
+        else:
+            return True, "There is no path from the start node to the end node."
+    elif max_flow != mfp_optimal_flow:
+        return False, f"The calculated flow ({max_flow}) does not match the optimal solution ({mfp_optimal_flow})."
     return True, "The solution is valid."
 
-# # Example usage:
-# # Define an example SPP instance
-# spp_instance = {
-#     'nodes': [0, 1, 2, 3],
-#     'edges': [
-#         {'from': 0, 'to': 1, 'weight': 4},
-#         {'from': 1, 'to': 2, 'weight': 1},
-#         {'from': 2, 'to': 3, 'weight': 3},
-#         {'from': 0, 'to': 3, 'weight': 6}
-#     ],
-#     'complexity_level': 1
-# }
 
-# # Define a solution for the SPP instance
-# spp_solution = json.dumps({
-#     'Answer': {
-#         'path': [0, 1, 2, 3],
-#         'total_cost': 8
-#     }
-# })
+# # Example usage:
+# # Define an example MFP instance
+# mfp_instance =   {
+#     "nodes": 4,
+#     "edges": [
+#         {"from": 0, "to": 3, "capacity": 3},
+#         {"from": 0, "to": 3, "capacity": 4},
+#         {"from": 0, "to": 3, "capacity": 2},
+#         {"from": 2, "to": 3, "capacity": 3},
+#         {"from": 0, "to": 2, "capacity": 4},
+#         {"from": 1, "to": 2, "capacity": 3}
+#     ],
+#     "source": 0,
+#     "sink": 3,
+#     "complexity_level": 3
+#   }
+
+# # Define a solution for the MFP instance
+# mfp_solution = {"MaxFlow": 12, "Flows": {"0->3": 9, "0->2": 3, "2->3": 3}}
 
 # # Validate the solution
-# is_valid, message = spp_check(spp_instance, spp_solution, start_node=0, end_node=3)
+# is_valid, message = mfp_check(mfp_instance, mfp_solution)
 # print(is_valid, message)
