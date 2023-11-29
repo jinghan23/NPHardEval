@@ -17,8 +17,12 @@ def read_dimacs_format(dimacs_str):
 
     return num_vertices, adjacency_list
 
-def gcp_optimal_solution(adjacency_list):
-    """Provides the optimal solution for the GCP instance."""
+def gcp_greedy_solution(adjacency_list):
+    """Provides a greedy solution to the GCP problem.
+    
+    :param adjacency_list: A dictionary of the adjacency list.
+    :return: A tuple of (num_colors, coloring).
+    """
     G = nx.Graph()
     G.add_nodes_from(adjacency_list.keys())
     for vertex, neighbors in adjacency_list.items():
@@ -40,7 +44,7 @@ def gcp_decision_check(dimacs_str, answer, k_colors):
     """
     num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
     is_feasible = answer.get('Feasible', 'no').lower() == 'yes'
-    num_colors, coloring = gcp_optimal_solution(adjacency_list)
+    num_colors, coloring = gcp_greedy_solution(adjacency_list)
     exist_optimal = num_colors <= k_colors
     if is_feasible != exist_optimal:
         if exist_optimal:

@@ -4,7 +4,14 @@ import networkx as nx
 
 
 def mfp_optimal_solution(num_nodes, edge_capacities, source, target):
-    """Provides the optimal solution for the MFP instance."""
+    """Provides the optimal solution for the MFP instance.
+
+    :param num_nodes: The number of nodes in the graph.
+    :param edge_capacities: A dictionary of the edge capacities.
+    :param source: The source node.
+    :param target: The target node.
+    :return: The optimal maximum flow.
+    """
     G = nx.Graph()
     G.add_nodes_from(range(num_nodes))
     for edge_name, edge_capacity in edge_capacities.items():
@@ -19,15 +26,9 @@ def mfp_optimal_solution(num_nodes, edge_capacities, source, target):
 def mfp_check(instance, solution):
     """Validate the solution of the MFP problem.
 
-    Args:
-        instance (dict): The instance of the problem.
-        solution (dict): The solution of the problem.
-        start_node (int): The start node of the problem.
-        end_node (int): The end node of the problem.
-
-    Returns:
-    - A tuple (is_valid, message). is_valid is True if the solution is valid, False otherwise.
-        message contains information about the validity of the solution.
+    :param instance: The instance dictionary with nodes, edges, source, and sink.
+    :param solution: The solution dictionary with the maximum flow and flows.
+    :return: A tuple of (is_correct, message).
     """
     # Get the start and end nodes
     # Curently, the start and end nodes are the first and last nodes in the instance

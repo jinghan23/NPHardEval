@@ -5,7 +5,13 @@ import networkx as nx
 
 
 def ssp_optimal_solution(instance, source, target):
-    """Provides the optimal solution for the SSP instance."""
+    """Provides the optimal solution for the SSP instance.
+
+    :param instance: The SSP instance as a dictionary with 'nodes' and 'edges'.
+    :param source: The source node.
+    :param target: The destination node.
+    :return: The optimal shortest path length and path.
+    """
     G = nx.Graph()
     G.add_nodes_from(instance['nodes'])
     G.add_weighted_edges_from([(edge['from'], edge['to'], edge['weight']) for edge in instance['edges']])
@@ -19,18 +25,13 @@ def ssp_optimal_solution(instance, source, target):
 
 # SPP
 def spp_check(instance, solution, start_node=None, end_node=None):
-    """
-    Validate the SPP solution.
+    """Validate the solution of the SPP problem.
 
-    Parameters:
-    - instance: The SPP instance as a dictionary with 'nodes' and 'edges'.
-    - solution: A dictionary with 'path' as a list of nodes representing the path and 'total_cost' as the total cost of the path.
-    - start_node: The starting node of the path.
-    - end_node: The destination node of the path.
-
-    Returns:
-    - A tuple (is_valid, message). is_valid is True if the solution is valid, False otherwise.
-      message contains information about the validity of the solution.
+    :param instance: The instance dictionary with nodes and edges.
+    :param solution: The solution dictionary with the path and total distance.
+    :param start_node: The start node.
+    :param end_node: The end node.
+    :return: A tuple of (is_correct, message).
     """
     # Get the start and end nodes
     # Curently, the start and end nodes are the first and last nodes in the instance

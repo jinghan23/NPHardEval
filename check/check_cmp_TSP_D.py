@@ -4,7 +4,11 @@ import networkx as nx
 
 
 def tsp_approx(distance_matrix):
-    """Returns an approximate solution to the TSP problem."""
+    """Returns an approximate solution to the TSP problem.
+    
+    :param distance_matrix: A 2D numpy array representing the distance matrix.
+    :return: A list of the cities in the order they were visited.
+    """
     G = nx.from_numpy_array(distance_matrix)
     return nx.approximation.traveling_salesman_problem(G)
 
@@ -12,9 +16,9 @@ def tsp_decision_check(distance_matrix, threshold, tour):
     """
     Checks if a given TSP tour is valid and within the threshold distance.
 
-    :param adj_matrix: Path to the CSV file containing the distance matrix and threshold.
-    :param tour: String representing the TSP tour in the format "0->1->2->...->N->0"
-    :return: Boolean indicating whether the tour is valid and within the threshold distance.
+    :param distance_matrix: A 2D numpy array representing the distance matrix.
+    :param threshold: The maximum distance allowed.
+    :param tour: A dictionary containing the feasibility.
     """
     is_feasible = tour.get('Feasible', 'no').lower() == 'yes'
 

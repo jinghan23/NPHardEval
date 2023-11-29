@@ -3,7 +3,12 @@ import json
 
 
 def ksp_optimal_solution(knapsacks, capacity):
-    """Provides the optimal solution for the KSP instance."""
+    """Provides the optimal solution for the KSP instance with dynamic programming.
+    
+    :param knapsacks: A dictionary of the knapsacks.
+    :param capacity: The capacity of the knapsack.
+    :return: The optimal value.
+    """
     num_knapsacks = len(knapsacks)
 
     # Create a one-dimensional array to store intermediate solutions
@@ -18,16 +23,11 @@ def ksp_optimal_solution(knapsacks, capacity):
 
 # KSP
 def kspCheck(instance, solution):
-    """
-    Validate the KSP solution.
+    """Validates the solution for the KSP instance.
 
-    Parameters:
-    - instance: The KSP instance as a dictionary.
-    - solution: A dictionary with item ids as keys and a boolean indicating if the item is selected.
-
-    Returns:
-    - A tuple (is_valid, message). is_valid is True if the solution is valid, False otherwise.
-      message contains information about the validity of the solution.
+    :param instance: A dictionary of the KSP instance.
+    :param solution: A dictionary of the solution.
+    :return: A tuple of (is_correct, message).
     """
     # Change string key to integer key and value to boolean
     items = instance.get('items', [])
