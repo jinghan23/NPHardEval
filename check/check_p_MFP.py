@@ -36,15 +36,6 @@ def mfp_check(instance, solution):
     start_node = instance['source']
     end_node = instance['sink']
 
-    # Convert solution to dictionary
-    flows = solution.get('Flows', {})
-    max_flow = int(solution.get('MaxFlow', -1))
-
-    # Initialize node flows
-    node_flows = [0 for _ in range(num_nodes)]
-    node_flows[start_node] = max_flow
-    node_flows[end_node] = -max_flow
-
     # Initialize edge flows
     edges = instance['edges']
     edge_name_func = lambda from_node, to_node: f'{from_node}->{to_node}' if from_node < to_node else f'{to_node}->{from_node}'
@@ -53,6 +44,36 @@ def mfp_check(instance, solution):
         edge_name = edge_name_func(edge['from'], edge['to'])
         edge_capacities[edge_name] += int(edge['capacity'])
     edge_flows = {edge_name: 0 for edge_name in edge_capacities.keys()}
+
+    # Convert solution to dictionary
+    flows = solution.get('Flows', {})
+    max_flow = solution.get('MaxFlow', -1)
+
+    # Get the optimal solution
+    mfp_optimal_flow = mfp_optimal_solution(num_nodes, edge_capacities, start_node, end_node)
+    
+    if isinstance(max_flow, str):
+        if max_flow.isdigit():
+            max_flow = int(max_flow)
+        elif mfp_optimal_flow is None:
+            return True, f"There is no path from the start node to the end node, and the solution is {max_flow}."
+        else:
+            return False, f"The problem should be feasible ({mfp_optimal_flow}), but the solution is {max_flow}."
+    
+    if mfp_optimal_flow is None:
+        if max_flow > 0:
+            return False, f"The problem should be infeasible."
+        else:
+            return True, "There is no path from the start node to the end node."
+    elif max_flow < 0:
+        return False, f"The problem should be feasible ({mfp_optimal_flow}), but the solution is {max_flow}."
+
+   
+    # Initialize node flows
+    node_flows = [0 for _ in range(num_nodes)]
+    node_flows[start_node] = max_flow
+    node_flows[end_node] = -max_flow
+
 
     # Check if the flow is valid
     for edge, flow in flows.items():
@@ -80,13 +101,7 @@ def mfp_check(instance, solution):
             return False, f"Edge {edge_name} with {edge_flow} exceeds its capacity {edge_capacity}."
 
     # Check if the flow is optimal
-    mfp_optimal_flow = mfp_optimal_solution(num_nodes, edge_capacities, start_node, end_node)
-    if mfp_optimal_flow is None:
-        if max_flow >= 0:
-            return False, f"The problem should be infeasible."
-        else:
-            return True, "There is no path from the start node to the end node."
-    elif max_flow != mfp_optimal_flow:
+    if max_flow != mfp_optimal_flow:
         return False, f"The calculated flow ({max_flow}) does not match the optimal solution ({mfp_optimal_flow})."
     return True, "The solution is valid."
 

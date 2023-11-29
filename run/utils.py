@@ -2,15 +2,27 @@ import xml.etree.ElementTree as ET
 import ast
 
 
+def append_root_tags(string):
+    if not string.strip().startswith("<root>"):
+        string = "<root>\n" + string
+    if not string.strip().endswith("</root>"):
+        string += "\n</root>"
+    return string
+
 def parse_xml_to_dict(xml_string: str):
-    """_summary_
+    """Parse the XML string to a dictionary.
 
-    Args:
-        xml_string (str): llm output string
-
-    Returns:
-        dict: dictionary of llm output
+    :param xml_string: The XML string to parse.
+    :return: A tuple of (output, reasoning).
     """
+    # Append root tags if necessary
+    print(xml_string)
+    xml_string = append_root_tags(xml_string)
+
+    # remove comments
+    remove_comment_func = lambda string: string.split('//')[0].rstrip() if '//' in string else string
+    xml_string = '\n'.join(remove_comment_func(line) for line in xml_string.split('\n'))
+    
     # Parse the XML string
     root = ET.fromstring(xml_string)
 
