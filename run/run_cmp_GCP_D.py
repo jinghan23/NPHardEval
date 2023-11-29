@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models import *
 from prompts import gcp_dPrompts
 from check.check_cmp_GCP_D import *
+from utils import parse_xml_to_dict
 
 import pandas as pd
 import numpy as np
@@ -23,27 +24,30 @@ args = parser.parse_args()
 # Script logic using args.model as the model name
 MODEL = str(args.model)
 
-DATA_PATH = '../Data/GCP-D/'
+DATA_PATH = '../Data/GCP_Decision/'
 RESULT_PATH = '../Results/'
 
 def load_data():
     data_path = DATA_PATH
     all_data = []
     for file_num in range(10):
-        with open(data_path + "synthesized_data_GCP-D_{}.txt".format(file_num)) as f:
+        with open(data_path + "decision_data_GCP_{}.txt".format(file_num)) as f:
             data = f.read()
         all_data += data.split('\n\n')[:-1]
     return all_data
 
 def runGCP_D(q, p=gcp_dPrompts):
-    graph_data, number_of_colors = q
-    total_vertices = len(graph_data)
+    number_of_colors = q.split('\n')[0].split()[-2] # last character of the first line
+    number_of_vertices = q.split('\n')[1].split(' ')[2] # third word of the second line
     prompt_text = p['Intro'] + '\n' + \
-                  p['Initial_question'].format(total_vertices=total_vertices, number_of_colors=number_of_colors) + '\n' + \
+                  p['Initial_question'].format(total_vertices=number_of_vertices, number_of_colors=number_of_colors) + '\n' + \
                   p['Output_content'] + '\n' + \
                   p['Output_format'] + '\n' + \
-                  'The graph adjacency list is as follows: \n' + \
-                  graph_data
+                    '\n The graph is below: \n'
+    for line in q.split('\n')[2:]:
+        vertex_list = line.split(' ')
+        this_line = "Vertex {} is connected to vertex {}.".format(vertex_list[1],vertex_list[2])
+        prompt_text += this_line + '\n'
 
     if 'gpt' in MODEL:
         output = run_gpt(prompt_text, model=MODEL)
@@ -68,9 +72,11 @@ if __name__ == '__main__':
         num_try = 0
         while num_try < MAX_TRY:
             try:
-                output = runGCP_D(q)
+                llm_string = runGCP_D(q)
+                number_of_colors = int(q.split('\n')[0].split()[-2])
+                output = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
-                output_dict['correctness'] = gcp_decision_check(q, output)
+                output_dict['correctness'] = gcp_decision_check(q, output, number_of_colors)
                 break
             except Exception as e:
                 print(f"Attempt {num_try + 1} failed: {e}")

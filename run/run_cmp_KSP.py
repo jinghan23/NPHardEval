@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models import *
 from prompts import kspPrompts
 from check.check_cmp_KSP import *
+from utils import parse_xml_to_dict
 
 import pandas as pd
 import numpy as np
@@ -60,13 +61,14 @@ if __name__ == '__main__':
 
     print("Using model: {}".format(MODEL))
 
-    MAX_TRY = 10
-    for q in kspData:
+    MAX_TRY = 1
+    for q in kspData[:5]:
         output_dict = {}
         num_try = 0
         while num_try < MAX_TRY:
             try:
-                output = runKSP(q)
+                llm_string = runKSP(q)
+                output = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = kspCheck(q, output)
                 break

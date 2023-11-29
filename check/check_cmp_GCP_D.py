@@ -1,4 +1,4 @@
-import ast
+import networkx as nx
 
 def read_dimacs_format(dimacs_str):
     lines = dimacs_str.strip().split('\n')
@@ -17,32 +17,38 @@ def read_dimacs_format(dimacs_str):
 
     return num_vertices, adjacency_list
 
-def parse_answer(answer_str):
-    all_answers = ast.literal_eval(answer_str)['Answer']
-    answer_dict = {}
-    for pair in all_answers:
-        vertex, color = pair.split(":")
-        answer_dict[int(vertex)] = color
-    return answer_dict
-
-def gcp_decision_check(dimacs_str, answer_str, k_colors):
-    num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
-    answer_colors = parse_answer(answer_str)
-
-    # Check if the coloring uses no more than k_colors
-    if len(set(answer_colors.values())) > k_colors:
-        print(f"Invalid coloring: More than {k_colors} colors used.")
-        return False
-
-    # Check if adjacent vertices have different colors
+def gcp_optimal_solution(adjacency_list):
+    """Provides the optimal solution for the GCP instance."""
+    G = nx.Graph()
+    G.add_nodes_from(adjacency_list.keys())
     for vertex, neighbors in adjacency_list.items():
         for neighbor in neighbors:
-            if answer_colors[vertex] == answer_colors[neighbor]:
-                print(f"Invalid coloring: Vertex {vertex} and {neighbor} have the same color.")
-                return False
+            G.add_edge(vertex, neighbor)
+    coloring = nx.coloring.greedy_color(G, strategy='largest_first')
+    num_colors = max(coloring.values()) + 1
+    return num_colors, coloring
 
-    print("Valid coloring found.")
-    return True
+
+def gcp_decision_check(dimacs_str, answer, k_colors):
+    """
+    Check if the given GCP instance is feasible with k_colors.
+    
+    :param dimacs_str: The DIMACS format string of the GCP instance.
+    :param answer: The answer returned by the model.
+    :param k_colors: The target number of colors.
+    :return: A tuple of (is_correct, message).
+    """
+    num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
+    is_feasible = answer.get('Feasible', 'no').lower() == 'yes'
+    num_colors, coloring = gcp_optimal_solution(adjacency_list)
+    exist_optimal = num_colors <= k_colors
+    if is_feasible != exist_optimal:
+        if exist_optimal:
+            return False, f"Feasibility mismatch: {coloring}"
+        else:
+            return False, f"Feasibility mismatch: {is_feasible} vs {exist_optimal}"
+    return True, "Feasible" if is_feasible else "Infeasible"
+
 
 # # Example usage:
 # dimacs_format_str = """
@@ -69,7 +75,7 @@ def gcp_decision_check(dimacs_str, answer_str, k_colors):
 # e 11 15
 # e 12 16
 # """
-# answer_str = "{'Answer': ['1:A', '2:B', '3:C', '4:B', '5:C', '6:A', '7:C', '8:B', '9:A', '10:A', '11:B', '12:B', '13:C', '14:A']}"
-# k_colors = 3  # The target number of colors
+# answer_str = {'Feasible': 'NO'}
+# k_colors = 2  # The target number of colors
 
-# gcp_decision_check(dimacs_format_str, answer_str, k_colors)
+# print(gcp_decision_check(dimacs_format_str, answer_str, k_colors))

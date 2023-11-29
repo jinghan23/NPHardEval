@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models import *
 from prompts import tsp_dPrompts
 from check.check_cmp_TSP_D import *
+from utils import parse_xml_to_dict
 
 import pandas as pd
 import numpy as np
@@ -37,18 +38,18 @@ def load_data():
             all_data.append(df)
     return all_data
 
-def runTSP_D(q, distance_limit, p=tsp_dPrompts):
-    total_cities = q.shape[0]-1 # exclude the last row
+def runTSP_D(adj_matrix, distance_limit, p=tsp_dPrompts):
+    total_cities = adj_matrix.shape[0] # exclude the last row
     prompt_text = p['Intro'] + '\n' + \
                   p['Initial_question'].format(total_cities=total_cities, distance_limit=distance_limit) + '\n' + \
                   p['Output_content'] + '\n' + \
                   p['Output_format'] + '\n' + \
                   'The distances between cities are below: \n'
     
-    for i in range(q.shape[0]-1):
-        for j in range(q.shape[1]):
+    for i in range(adj_matrix.shape[0]):
+        for j in range(adj_matrix.shape[1]):
             if i < j:  # only use the upper triangle
-                this_line = "The distance between City {} and City {} is {}.".format(i, j, q.iloc[i, j])
+                this_line = "The distance between City {} and City {} is {}.".format(i, j, adj_matrix[i, j])
                 prompt_text += this_line + '\n'
 
     if 'gpt' in MODEL:
@@ -66,20 +67,18 @@ if __name__ == '__main__':
     print(len(tsp_d_Data))
     tsp_d_Results = []
 
-    print("Using model: {}".format(MODEL))
-
     MAX_TRY = 10
     for q in tsp_d_Data:
-        distance_limit = q.iloc[-1, 0] # therashold is the last row
+        threshold = q.iloc[-1, 0] # therashold is the last row
+        distance_matrix = q.iloc[:-1].values # distance matrix is the rest of the rows
         output_dict = {}
         num_try = 0
         while num_try < MAX_TRY:
             try:
-                print(q)
-                output = runTSP_D(q, distance_limit)
-                print(output)
+                llm_string = runTSP_D(distance_matrix, threshold)
+                output = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
-                output_dict['correctness'] = tsp_decision_check(q, output)
+                output_dict['correctness'] = tsp_decision_check(distance_matrix, threshold, output)
                 break
             except Exception as e:
                 print(f"Attempt {num_try + 1} failed: {e}")
