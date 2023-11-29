@@ -67,16 +67,17 @@ if __name__ == '__main__':
     print("Using model: {}".format(MODEL))
 
     MAX_TRY = 10
-    for q in gcp_d_Data:
+    for q in gcp_d_Data[:5]:
         output_dict = {}
         num_try = 0
         while num_try < MAX_TRY:
             try:
                 llm_string = runGCP_D(q)
                 number_of_colors = int(q.split('\n')[0].split()[-2])
-                output = parse_xml_to_dict(llm_string)
+                output, reasoning = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = gcp_decision_check(q, output, number_of_colors)
+                output_dict['reasoning'] = reasoning
                 break
             except Exception as e:
                 print(f"Attempt {num_try + 1} failed: {e}")

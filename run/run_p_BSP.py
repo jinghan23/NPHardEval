@@ -66,9 +66,10 @@ if __name__ == '__main__':
         while num_try < MAX_TRY:
             try:
                 llm_string = runBSP(q)
-                output = parse_xml_to_dict(llm_string)
+                output, reasoning = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = bsp_check(q, output)
+                output_dict['reasoning'] = reasoning
                 break
             except Exception as e:
                 print(f"Attempt {num_try + 1} failed: {e}")

@@ -76,9 +76,10 @@ if __name__ == '__main__':
         while num_try < MAX_TRY:
             try:
                 llm_string = runTSP_D(distance_matrix, threshold)
-                output = parse_xml_to_dict(llm_string)
+                output, reasoning = parse_xml_to_dict(llm_string)
                 output_dict['output'] = output
                 output_dict['correctness'] = tsp_decision_check(distance_matrix, threshold, output)
+                output_dict['reasoning'] = reasoning
                 break
             except Exception as e:
                 print(f"Attempt {num_try + 1} failed: {e}")

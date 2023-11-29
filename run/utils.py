@@ -18,9 +18,9 @@ def parse_xml_to_dict(xml_string: str):
     final_answer_element = root.find('final_answer')
 
     # Find the 'reasoning' tag
-    reasoning_element = root.find('reasoning')
+    reasoning = root.find('reasoning').text.strip()
 
     # Convert the 'final_answer' tag to a dictionary
     output = ast.literal_eval(final_answer_element.text.strip())
     # print(reasoning_element.text)
-    return output
+    return output, reasoning
