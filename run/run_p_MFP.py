@@ -64,7 +64,7 @@ if __name__ == '__main__':
     print("Using model: {}".format(MODEL))
 
     MAX_TRY = 10
-    for q in mfpData[:5]:
+    for q in mfpData:
         output_dict = {}
         num_try = 0
         while num_try < MAX_TRY:
