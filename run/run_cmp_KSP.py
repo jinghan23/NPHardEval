@@ -62,7 +62,7 @@ if __name__ == '__main__':
     print("Using model: {}".format(MODEL))
 
     MAX_TRY = 1
-    for q in kspData[:5]:
+    for q in kspData:
         output_dict = {}
         num_try = 0
         while num_try < MAX_TRY:
