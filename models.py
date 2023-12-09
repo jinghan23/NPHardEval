@@ -9,20 +9,21 @@ import pandas as pd
 
 '''
 Close-source models
+Included:
 - GPT-4-turbo, 
 - GPT-3.5-turbo, 
 - Claude 2, 
 - Claude 2 Instant, and 
 - PaLM 2
+TODO:
+- Gemini
 '''
-#import anthropic
 
 from openai import OpenAI
+import anthropic
 from google.cloud import aiplatform
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel, ChatModel
-
-#get_ipython().system('gcloud auth application-default login')
 
 ### Load secrets
 SECRET_FILE = '../../secrets.txt'
@@ -37,7 +38,7 @@ with open('../../secrets.txt') as f:
             palm_project_id = line.split(',')[1].strip()
 
 openai_client = OpenAI(api_key=open_ai_key)
-# claude_client = anthropic.Anthropic(api_key=anthropic_key)
+claude_client = anthropic.Anthropic(api_key=anthropic_key)
 vertexai.init(project = palm_project_id, location="us-central1")
 chat_model = ChatModel.from_pretrained("chat-bison@001")
 ### Run Models
@@ -58,7 +59,6 @@ def run_gpt(text_prompt, max_tokens_to_sample: int = 3000, temperature: float = 
 
 
 # Claude 2 models (Claude 2 and Claude 2 Instant)
-"""
 def run_claude(text_prompt, max_tokens_to_sample: int = 3000, temperature: float = 0, client=claude_client, model = "claude-instant-1.2"):
     # use claude-instant unless specify claude-2
     prompt = f"{anthropic.HUMAN_PROMPT} {text_prompt}{anthropic.AI_PROMPT}"
@@ -70,7 +70,6 @@ def run_claude(text_prompt, max_tokens_to_sample: int = 3000, temperature: float
         temperature=temperature,
     ).completion
     return resp
-"""
 
 # PaLM 2 model
 
@@ -88,12 +87,13 @@ def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float =
 
 '''
 Open-source models (choose from below, in total 5 models)
-
+Inbcluded:
 - [v] Vicuna
 - [v] Mistral-7b
 - [v] Yi-34b
 - [v] Phi
 - [v] baichuan
+TODO:
 - Falcon
 - Fuyu
 - LlaMa 2
@@ -104,7 +104,6 @@ Open-source models (choose from below, in total 5 models)
 
 # from vllm import LLM, SamplingParams
 
-# # TODO: add open-source models
 # def run_mistral(text_prompt):
 #     sampling_params = SamplingParams(temperature=0, max_tokens=512)
 #     llm = LLM(
@@ -162,5 +161,5 @@ Open-source models (choose from below, in total 5 models)
 
 if __name__ == '__main__':
     # try claude2-instant
-    resp = run_gpt(text_prompt= "I am a human, and I am a", model="gpt-4-1106-preview") # claude-2 works claude-instant-1.2
+    resp = run_palm(text_prompt= "I am a human, and I am a", model="chat-bison@001") # claude-2 works claude-instant-1.2
     print(resp)
