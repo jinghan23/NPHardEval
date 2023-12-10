@@ -88,7 +88,7 @@ def calculate_accuracy(expr_result):
 #############################################################################################################
 
 model_performance = []
-RESULT_DIR = 'Results'
+RESULT_DIR = '../Results'
 for file in os.listdir(RESULT_DIR):
     if file.endswith('.json'):
         model = file.split('_')[0]
@@ -104,17 +104,17 @@ for file in os.listdir(RESULT_DIR):
                     if not isinstance(correctness, bool): 
                         correctness = 'failed'
                     # the output can be a string or a dictionary
-                    # if (not correctness) and (not isinstance(x.get('output', None), dict)):
-                    #     # if it is a string, try to parse it to a dictionary
-                    #     # reusing the parse_xml_to_dict function
-                    #     # if it fails, then the case is actually failed
-                    #     if isinstance(x.get('output', None), str):
-                    #         try:
-                    #             output, _ = parse_xml_to_dict(x.get('output', None))
-                    #             if not isinstance(output, dict):
-                    #                 correctness = 'failed'
-                    #         except:
-                    #             correctness = 'failed'
+                    if (not correctness) and (not isinstance(x.get('output', None), dict)):
+                        # if it is a string, try to parse it to a dictionary
+                        # reusing the parse_xml_to_dict function
+                        # if it fails, then the case is actually failed
+                        if isinstance(x.get('output', None), str):
+                            try:
+                                output, _ = parse_xml_to_dict(x.get('output', None))
+                                if not isinstance(output, dict):
+                                    correctness = 'failed'
+                            except:
+                                correctness = 'failed'
                     correct.append(correctness)
             performance = {
                 'model': model,
@@ -155,6 +155,8 @@ for expr_result in model_performance:
     result_df.append(expr_df)
 result_df = pd.concat(result_df)
 
+result_df.to_csv('summary/results.csv', index=False)
+
 
 #############################################################################################################
 #### Visualize the results                                                                               ####
@@ -167,53 +169,58 @@ tmp_df = result_df.groupby(['model', 'problem', 'complexity', 'is_close'], as_in
     'weighted_failed': 'sum'
 }).reset_index()
 
-# TO-DO: Change the column name to visualize different metrics
+# Change the column name to visualize different metrics
 # col_name = 'Average accuracy'
-col_name = 'weighted_accuracy'
+# col_name = 'weighted_accuracy'
 # col_name = 'weighted_failed'
 
-tmp_df = tmp_df.groupby(['model', 'complexity', 'is_close'], as_index=False).agg({col_name: 'mean'}).reset_index()
-mean_tmp_df = tmp_df.groupby(['complexity', 'is_close'], as_index=False).agg({col_name: 'mean'})
-mean_tmp_df['comp_order'] = mean_tmp_df['complexity'].map({'p': 1, 'np-cmp': 2, 'np-hard': 3})
-tmp_df['comp_order'] = tmp_df['complexity'].map({'p': 1, 'np-cmp': 2, 'np-hard': 3})
-tmp_df.sort_values(by=['comp_order', 'is_close'], inplace=True)
-plt.figure(figsize=(10, 6))
+def plot_final_output(col_name, tmp_df):
+    tmp_df = tmp_df.groupby(['model', 'complexity', 'is_close'], as_index=False).agg({col_name: 'mean'}).reset_index()
+    mean_tmp_df = tmp_df.groupby(['complexity', 'is_close'], as_index=False).agg({col_name: 'mean'})
+    mean_tmp_df['comp_order'] = mean_tmp_df['complexity'].map({'p': 1, 'np-cmp': 2, 'np-hard': 3})
+    tmp_df['comp_order'] = tmp_df['complexity'].map({'p': 1, 'np-cmp': 2, 'np-hard': 3})
+    tmp_df.sort_values(by=['comp_order', 'is_close'], inplace=True)
+    plt.figure(figsize=(10, 6))
 
-# make one red palette and one blue palette
-palette = sns.color_palette("tab10", n_colors=10)
-palette = sorted(palette, key=lambda x: x[0] - x[2])
-sns.lineplot(data=tmp_df[~tmp_df['is_close']], x='complexity', y=col_name, hue='model', alpha=0.6, linestyle='--', palette=palette[:5])
-sns.lineplot(data=mean_tmp_df[~mean_tmp_df['is_close']], x='complexity', y=col_name, color='blue', marker='o', label='Open models')
+    # make one red palette and one blue palette
+    palette = sns.color_palette("tab10", n_colors=10)
+    palette = sorted(palette, key=lambda x: x[0] - x[2])
+    sns.lineplot(data=tmp_df[~tmp_df['is_close']], x='complexity', y=col_name, hue='model', alpha=0.6, linestyle='--', palette=palette[:5])
+    sns.lineplot(data=mean_tmp_df[~mean_tmp_df['is_close']], x='complexity', y=col_name, color='blue', marker='o', label='Open models')
 
-# annotate the mean value of open models
-for i, row in mean_tmp_df[~mean_tmp_df['is_close']].iterrows():
-    plt.text(row['comp_order'] - 1, row[col_name] + 0.02, f'{row[col_name]:.2f}', fontsize=10, color='darkblue')
-sns.lineplot(data=tmp_df[tmp_df['is_close']], x='complexity', y=col_name, hue='model', alpha=0.6, linestyle='--', palette=palette[5:])
-sns.lineplot(data=mean_tmp_df[mean_tmp_df['is_close']], x='complexity', y=col_name, color='red', marker='o', label='Close models')
+    # annotate the mean value of open models
+    for i, row in mean_tmp_df[~mean_tmp_df['is_close']].iterrows():
+        plt.text(row['comp_order'] - 1, row[col_name] + 0.02, f'{row[col_name]:.2f}', fontsize=10, color='darkblue')
+    sns.lineplot(data=tmp_df[tmp_df['is_close']], x='complexity', y=col_name, hue='model', alpha=0.6, linestyle='--', palette=palette[5:])
+    sns.lineplot(data=mean_tmp_df[mean_tmp_df['is_close']], x='complexity', y=col_name, color='red', marker='o', label='Close models')
 
-# annotate the mean value of close models
-for i, row in mean_tmp_df[mean_tmp_df['is_close']].iterrows():
-    plt.text(row['comp_order'] - 1, row[col_name] + 0.02, f'{row[col_name]:.2f}', fontsize=10, color='darkred')
+    # annotate the mean value of close models
+    for i, row in mean_tmp_df[mean_tmp_df['is_close']].iterrows():
+        plt.text(row['comp_order'] - 1, row[col_name] + 0.02, f'{row[col_name]:.2f}', fontsize=10, color='darkred')
 
-# set the title and labels
-if col_name == 'weighted_accuracy':
-    plt.title(f'Weighted accuracy for different models on different complexity problems', fontsize=18)
-    plt.ylabel(f'Weighted accuracy', fontsize=14)
-elif col_name == 'Average accuracy':
-    plt.title(f'Average accuracy for different models on different complexity problems', fontsize=16)
-    plt.ylabel(f'Average accuracy')
-else:
-    plt.title(f'Weighted failure rate for different models on different complexity problems', fontsize=16)
-    plt.ylabel(f'Weighted failure rate', fontsize=16)
-plt.xlabel('Complexity', fontsize=14)
-plt.xticks(fontsize=12)
-plt.yticks(fontsize=12)
+    # set the title and labels
+    if col_name == 'weighted_accuracy':
+        plt.title(f'Weighted accuracy for different models on different complexity problems', fontsize=18)
+        plt.ylabel(f'Weighted accuracy', fontsize=14)
+    elif col_name == 'Average accuracy':
+        plt.title(f'Average accuracy for different models on different complexity problems', fontsize=16)
+        plt.ylabel(f'Average accuracy')
+    else:
+        plt.title(f'Weighted failure rate for different models on different complexity problems', fontsize=16)
+        plt.ylabel(f'Weighted failure rate', fontsize=16)
+    plt.xlabel('Complexity', fontsize=14)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
 
-# set the legend and save the figure
-plt.tight_layout()
-if col_name == 'weighted_failed':
-    plt.legend(title='Model', fontsize=12, loc='upper left', ncols=2)
-else:
-    plt.legend(title='Model', loc='upper right', ncols=2, fontsize=12)
-plt.ylim(0, 1)
-plt.savefig(f'figures/{col_name}.png', dpi=500, bbox_inches='tight')
+    # set the legend and save the figure
+    plt.tight_layout()
+    if col_name == 'weighted_failed':
+        plt.legend(title='Model', fontsize=12, loc='best', ncols=2)
+    else:
+        plt.legend(title='Model', loc='upper right', ncols=2, fontsize=12)
+    plt.ylim(0, 1)
+    plt.savefig(f'summary/figures/{col_name}.png', dpi=500, bbox_inches='tight')
+
+
+for col_name in ['weighted_accuracy', 'weighted_failed']:
+    plot_final_output(col_name, tmp_df)
