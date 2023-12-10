@@ -1,2 +1,2 @@
-# NP Hard GPT
-Repository for the LLM-based MAS Reasoning Ability Increment Architecture
+# NPHardEval: Benchmarking Reasoning Ability of Large Language Models via Complexity Classes
+
