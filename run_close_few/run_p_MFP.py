@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser(description='Run MFP model script')
 # Add an argument for the model name
 parser.add_argument('model', type=str, help='The name of the model to run')
 parser.add_argument('prompt_style', type=str, help='The name of the prompt style to run')
+parser.add_argument('difficulty_level', type=int, help='-5, -4, -3, ...')
 
 # Parse the argument
 args = parser.parse_args()

@@ -117,6 +117,6 @@ if __name__ == '__main__':
                 print(f"Failed to run {q}")
                 bspResults.append({'output': '', 'correctness': False})
 
-    # Save the results
-    with open(RESULT_PATH + MODEL + '_' + 'bspResults_few_{}.json'.format(PROMPT_STYLE), 'a') as f:
-        f.write(json.dumps(bspResults) + '\n')
+        # Save the results
+        with open(RESULT_PATH + MODEL + '_' + 'bspResults_{}_{}.json'.format(PROMPT_STYLE,DIFFICULTY_LEVEL), 'a') as f:
+            f.write(json.dumps(bspResults) + '\n')
