@@ -37,28 +37,29 @@ def load_data():
         all_data = json.load(f)
     return all_data
 
-# TODO
-# to change
-# also need to have different input for differetn functions.
-def construct_few_shot_examples(examples):
+def construct_few_shot_examples(examples, PROMPT_STYLE):
     few_shot_examples = '\n\nBelow are 5 examples:\n'
     for i, example in enumerate(examples):
-        question = 'The sorted array elements are: ' + ', '.join(str(a) for a in example['question']['array'])
+        if PROMPT_STYLE == 'self':
+            question = 'The capacities of the network\'s edges are: ' + ', '.join(str(a) for a in example['question']['array'])
+        elif PROMPT_STYLE == 'other':
+            question = 'The sorted array elements are: ' + ', '.join(str(a) for a in example['question']['array'])
         few_shot_examples += '<example{}>\nQuestion:\n'.format(i+1)+question + '\nOutput:\n' + str(example['output']) + '\n</example{}>\n\n'.format(str(i+1))
 
     return few_shot_examples
 
 
-def runMFP(q, p=mfpPrompts):
+def runMFP(q, eg, p=mfpPrompts):
     source_node = q['source']
     sink_node = q['sink']
-
     edges = q['edges']
+    
     prompt_text = p['Intro'] + '\n' + \
                   p['Initial_question'].format(source_node=source_node, sink_node=sink_node) + '\n' + \
-                  p['Output_content'] + '\n' + \
+                  eg + '\n' + \
+                  'Again, 'p['Initial_question'].format(source_node=source_node, sink_node=sink_node) + '\n' + \
                   p['Output_format'] + \
-                  "\n The capacities of the network's edges are as follows: \n"
+                  "\n For the question you need to solve, the capacities of the network's edges are as follows: \n"
     for edge in edges:
         this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {edge['capacity']}."
         prompt_text += this_line + '\n'
@@ -75,31 +76,54 @@ def runMFP(q, p=mfpPrompts):
 
 if __name__ == '__main__':
     mfpData = load_data()
-    mfpResults = []
 
     print("Using model: {}".format(MODEL))
 
     MAX_TRY = 10
-    for q in mfpData:
-        output_dict = {}
-        num_try = 0
-        while num_try < MAX_TRY:
-            try:
-                llm_string = runMFP(q)
-                output, reasoning = parse_xml_to_dict(llm_string)
-                output_dict['output'] = output
-                output_dict['correctness'] = mfp_check(q, output)
-                output_dict['reasoning'] = reasoning
-                break
-            except Exception as e:
-                print(f"Attempt {num_try + 1} failed: {e}")
-                num_try += 1
-        if output_dict:
-            mfpResults.append(output_dict)
-        else:
-            print(f"Failed to run {q}")
-            mfpResults.append({'output': '', 'correctness': False})
 
-    # Save the results
-    with open(RESULT_PATH + MODEL + '_' + 'mfpResults_few_{}.json'.format(PROMPT_STYLE), 'a') as f:
-        f.write(json.dumps(mfpResults) + '\n')
+    if PROMPT_STYLE == 'self':
+        with open(EXAMPLE_PATH+'MFP_few_shots.json', 'r') as f:
+            fewshot_data = json.load(f)
+    elif PROMPT_STYLE == 'other':
+        with open(EXAMPLE_PATH+'BSP_few_shots_other.json', 'r') as f:
+            fewshot_data = json.load(f)
+    else:
+        print('Prompt style not found')
+        exit(1)
+
+    for DIFFICULTY_LEVEL in range(-5, 6):
+        mfpResults = []
+        print("**********")
+        print(f"Difficulty level: {DIFFICULTY_LEVEL}")
+        print("**********")
+        for q in mfpData:
+            # get examples
+            dif_level = (i//10) + DIFFICULTY_LEVEL
+            if dif_level < 0:
+                continue
+            examples = [d for d in fewshot_data if d['complexity_level'] == dif_level+1][:5]
+            few_shot_examples = construct_few_shot_examples(examples)
+
+            # save result
+            output_dict = {}
+            num_try = 0
+            while num_try < MAX_TRY:
+                try:
+                    llm_string = runMFP(q, few_shot_examples)
+                    output, reasoning = parse_xml_to_dict(llm_string)
+                    output_dict['output'] = output
+                    output_dict['correctness'] = mfp_check(q, output)
+                    output_dict['reasoning'] = reasoning
+                    break
+                except Exception as e:
+                    print(f"Attempt {num_try + 1} failed: {e}")
+                    num_try += 1
+            if output_dict:
+                mfpResults.append(output_dict)
+            else:
+                print(f"Failed to run {q}")
+                mfpResults.append({'output': '', 'correctness': False})
+
+        # Save the results
+        with open(RESULT_PATH + MODEL + '_' + 'mfpResults_few_{}_{}.json'.format(PROMPT_STYLE,DIFFICULTY_LEVEL), 'a') as f:
+            f.write(json.dumps(mfpResults) + '\n')

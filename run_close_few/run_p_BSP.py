@@ -38,23 +38,26 @@ def load_data():
         all_data = json.load(f)
     return all_data
 
-def construct_few_shot_examples(examples):
+def construct_few_shot_examples(examples, PROMPT_STYLE):
     few_shot_examples = '\n\nBelow are 5 examples:\n'
     for i, example in enumerate(examples):
-        question = 'The sorted array elements are: ' + ', '.join(str(a) for a in example['question']['array'])
+        if PROMPT_STYLE == 'self':
+            question = 'The sorted array elements are: ' + ', '.join(str(a) for a in example['question']['array'])
+        elif PROMPT_STYLE == 'other':
+            question = 'The capacities of the network\'s edges are: ' + ', '.join(str(a) for a in example['question']['array'])
         few_shot_examples += '<example{}>\nQuestion:\n'.format(i+1)+question + '\nOutput:\n' + str(example['output']) + '\n</example{}>\n\n'.format(str(i+1))
 
     return few_shot_examples
 
 def runBSP(q, eg, p=bspPrompts):
     target_value = q['target']
-    # TO-DO: fix data not being sorted
     array = sorted(q['array'])
+    
     prompt_text = p['Intro'] + '\n' + \
                   p['Initial_question'].format(target_value=target_value) + '\n' + \
-                  p['Output_content'] + '\n' + \
-                  p['Output_format'] + '\n' + \
                   eg + '\n' + \
+                  'Again, '+ p['Initial_question'].format(target_value=target_value) + '\n' + \
+                  p['Output_format'] + '\n' + \
                   '\n For the question you need to solve, the sorted array elements are: ' + ', '.join(map(str, array)) + '\n'
 
     if 'gpt' in MODEL:
@@ -69,7 +72,6 @@ def runBSP(q, eg, p=bspPrompts):
 
 if __name__ == '__main__':
     bspData = load_data()
-    bspResults = []
 
     print("Using model: {}".format(MODEL))
 
@@ -86,6 +88,7 @@ if __name__ == '__main__':
         exit(1)
 
     for DIFFICULTY_LEVEL in range(-5, 6):
+        bspResults = []
         print("**********")
         print(f"Difficulty level: {DIFFICULTY_LEVEL}")
         print("**********")

@@ -1,0 +1,12 @@
+model,example_level,correct,total
+gpt-4-1106-preview,-5,49,50
+gpt-4-1106-preview,-4,60,60
+gpt-4-1106-preview,-3,129,130
+gpt-4-1106-preview,-2,209,210
+gpt-4-1106-preview,-1,298,300
+gpt-4-1106-preview,0,397,400
+gpt-4-1106-preview,1,496,500
+gpt-4-1106-preview,2,596,600
+gpt-4-1106-preview,3,695,700
+gpt-4-1106-preview,4,795,800
+gpt-4-1106-preview,5,895,900
