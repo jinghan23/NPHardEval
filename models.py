@@ -45,7 +45,7 @@ claude_client = anthropic.Anthropic(api_key=anthropic_key)
 
 
 # GPT models (GPT-3.5 and GPT-4)
-def run_gpt(text_prompt, max_tokens_to_sample: int = 3000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
+def run_gpt(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
     # use gpt-3.5-turbo unless specify gpt-4
     response = client.chat.completions.create(
       model = model, 
@@ -73,17 +73,17 @@ def run_claude(text_prompt, max_tokens_to_sample: int = 3000, temperature: float
 
 # PaLM 2 model
 
-def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float = 0, model = "chat-bison@001"):
-    """Use Google PaLM chat model"""
-    parameters = {
-        "temperature": temperature, 
-        "max_output_tokens": max_tokens_to_sample
-    }
-    chat = chat_model.start_chat()
-    response = chat.send_message(text_prompt, **parameters)
-    response = response.text
-    time.sleep(2)
-    return response
+# def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float = 0, model = "chat-bison@001"):
+#     """Use Google PaLM chat model"""
+#     parameters = {
+#         "temperature": temperature, 
+#         "max_output_tokens": max_tokens_to_sample
+#     }
+#     chat = chat_model.start_chat()
+#     response = chat.send_message(text_prompt, **parameters)
+#     response = response.text
+#     time.sleep(2)
+#     return response
 
 '''
 Open-source models (choose from below, in total 5 models)
