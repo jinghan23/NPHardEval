@@ -39,8 +39,8 @@ with open('../../secrets.txt') as f:
 
 openai_client = OpenAI(api_key=open_ai_key)
 claude_client = anthropic.Anthropic(api_key=anthropic_key)
-vertexai.init(project = palm_project_id, location="us-central1")
-chat_model = ChatModel.from_pretrained("chat-bison@001")
+# vertexai.init(project = palm_project_id, location="us-central1")
+# chat_model = ChatModel.from_pretrained("chat-bison@001")
 ### Run Models
 
 
@@ -159,7 +159,7 @@ TODO:
 #     predictions = llm.generate(text_prompt, sampling_params)
 #     return predictions
 
-if __name__ == '__main__':
-    # try claude2-instant
-    resp = run_palm(text_prompt= "I am a human, and I am a", model="chat-bison@001") # claude-2 works claude-instant-1.2
-    print(resp)
+# if __name__ == '__main__':
+#     # try claude2-instant
+#     resp = run_palm(text_prompt= "I am a human, and I am a", model="chat-bison@001") # claude-2 works claude-instant-1.2
+#     print(resp)

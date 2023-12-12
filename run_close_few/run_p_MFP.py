@@ -27,13 +27,26 @@ MODEL = str(args.model)
 PROMPT_STYLE = str(args.prompt_style)
 
 DATA_PATH = '../Data/MFP/'
-RESULT_PATH = '../Results/'
+RESULT_PATH = '../Results_fewshot/'
+EXAMPLE_PATH = '../fewshot_eg/'
 
 def load_data():
     data_path = DATA_PATH
     with open(data_path + "mfp_instances.json", 'r') as f:
         all_data = json.load(f)
     return all_data
+
+# TODO
+# to change
+# also need to have different input for differetn functions.
+def construct_few_shot_examples(examples):
+    few_shot_examples = '\n\nBelow are 5 examples:\n'
+    for i, example in enumerate(examples):
+        question = 'The sorted array elements are: ' + ', '.join(str(a) for a in example['question']['array'])
+        few_shot_examples += '<example{}>\nQuestion:\n'.format(i+1)+question + '\nOutput:\n' + str(example['output']) + '\n</example{}>\n\n'.format(str(i+1))
+
+    return few_shot_examples
+
 
 def runMFP(q, p=mfpPrompts):
     source_node = q['source']
