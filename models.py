@@ -39,13 +39,13 @@ with open('../../secrets.txt') as f:
 
 openai_client = OpenAI(api_key=open_ai_key)
 claude_client = anthropic.Anthropic(api_key=anthropic_key)
-vertexai.init(project = palm_project_id, location="us-central1")
-chat_model = ChatModel.from_pretrained("chat-bison@001")
+# vertexai.init(project = palm_project_id, location="us-central1")
+# chat_model = ChatModel.from_pretrained("chat-bison@001")
 ### Run Models
 
 
 # GPT models (GPT-3.5 and GPT-4)
-def run_gpt(text_prompt, max_tokens_to_sample: int = 3000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
+def run_gpt(text_prompt, max_tokens_to_sample: int = 2000, temperature: float = 0, client=openai_client, model = "gpt-3.5-turbo"):
     # use gpt-3.5-turbo unless specify gpt-4
     response = client.chat.completions.create(
       model = model, 
@@ -73,17 +73,17 @@ def run_claude(text_prompt, max_tokens_to_sample: int = 3000, temperature: float
 
 # PaLM 2 model
 
-def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float = 0, model = "chat-bison@001"):
-    """Use Google PaLM chat model"""
-    parameters = {
-        "temperature": temperature, 
-        "max_output_tokens": max_tokens_to_sample
-    }
-    chat = chat_model.start_chat()
-    response = chat.send_message(text_prompt, **parameters)
-    response = response.text
-    time.sleep(2)
-    return response
+# def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float = 0, model = "chat-bison@001"):
+#     """Use Google PaLM chat model"""
+#     parameters = {
+#         "temperature": temperature, 
+#         "max_output_tokens": max_tokens_to_sample
+#     }
+#     chat = chat_model.start_chat()
+#     response = chat.send_message(text_prompt, **parameters)
+#     response = response.text
+#     time.sleep(2)
+#     return response
 
 '''
 Open-source models (choose from below, in total 5 models)
@@ -159,7 +159,7 @@ TODO:
 #     predictions = llm.generate(text_prompt, sampling_params)
 #     return predictions
 
-if __name__ == '__main__':
-    # try claude2-instant
-    resp = run_palm(text_prompt= "I am a human, and I am a", model="chat-bison@001") # claude-2 works claude-instant-1.2
-    print(resp)
+# if __name__ == '__main__':
+#     # try claude2-instant
+#     resp = run_palm(text_prompt= "I am a human, and I am a", model="chat-bison@001") # claude-2 works claude-instant-1.2
+#     print(resp)
