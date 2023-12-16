@@ -172,14 +172,20 @@ for expr_result in model_performance:
 result_df = pd.concat(result_df)
 result_df.to_csv('result_df_fewshot.csv')
 
+
+model_names = result_df.sort_values(by=['is_close', 'model']).model.unique().tolist()
+print(model_names)
 for problem in result_df.problem.unique():
+    plt.subplots(figsize=(32, 32), nrows=3, ncols=3)
     for model in result_df.model.unique():
         tmp_df = result_df[(result_df.model == model) & (result_df.problem == problem)]
         tmp_df = tmp_df.sort_values(by=['difference', 'level'])
         tmp_df = tmp_df.pivot(index='difference', columns='level', values='Average accuracy').sort_values(by='difference', ascending=False)
-        plt.figure(figsize=(10, 10))
+        # plt.figure(figsize=(10, 10))
+        plt.subplot(3, 3, model_names.index(model) + 1)
         sns.heatmap(tmp_df, annot=True, vmin=0, vmax=1, cmap='Reds', fmt='.2f')
         plt.title(f'{model} accuracy on {problem}'.title(), fontsize=20)
         plt.xlabel('Difficulty Level', fontsize=15)
         plt.ylabel('Difficulty Difference', fontsize=15)
-        plt.savefig(f'figures/{model}_{problem}_accuracy.png', dpi=500)
+    plt.tight_layout()
+    plt.savefig(f'figures/ablation/{problem}_accuracy.png', dpi=360)

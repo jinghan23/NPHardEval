@@ -1,4 +1,6 @@
 __pycache__/
+**/__pycache__/
 *.pyc
 old_scripts/
-
+.DS_Store
+**/.DS_Store
