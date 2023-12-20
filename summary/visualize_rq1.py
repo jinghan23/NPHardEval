@@ -88,7 +88,7 @@ def calculate_accuracy(expr_result):
 #############################################################################################################
 
 model_performance = []
-RESULT_DIR = '../Results'
+RESULT_DIR = 'Results'
 for file in os.listdir(RESULT_DIR):
     if file.endswith('.json'):
         model = file.split('_')[0]
@@ -155,7 +155,7 @@ for expr_result in model_performance:
     result_df.append(expr_df)
 result_df = pd.concat(result_df)
 
-result_df.to_csv('summary/results.csv', index=False)
+result_df.to_csv('results.csv', index=False)
 
 
 #############################################################################################################
@@ -219,7 +219,7 @@ def plot_final_output(col_name, tmp_df):
     else:
         plt.legend(title='Model', loc='upper right', ncols=2, fontsize=12)
     plt.ylim(0, 1)
-    plt.savefig(f'summary/figures/{col_name}.png', dpi=500, bbox_inches='tight')
+    plt.savefig(f'figures/{col_name}.png', dpi=500, bbox_inches='tight')
 
 
 for col_name in ['weighted_accuracy', 'weighted_failed']:
