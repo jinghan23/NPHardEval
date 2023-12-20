@@ -68,7 +68,7 @@ def answer_generate_MFP_helper(num_nodes, edge_capacities, source, target, f):
     max_flow = 0
     while True:
         print_graph_capacity(graph, f)
-        print("Considering edges with the capacity smaller than the current flow, one can navigate the graph with Breadth First Search to find the level graph:", file=f)
+        print("Considering edges with the capacity larger than the current flow, one can navigate the graph with Breadth First Search to find the level graph:", file=f)
         levels = bfs_level_graph(graph, source, target)
         for i, (node, level) in enumerate(levels.items()):
             print(f'{i}. the level of node {node} is {level}.', file=f)
