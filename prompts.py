@@ -30,6 +30,15 @@ bspPrompts = {
     "Few_shot_others": FEW_SHOT_OTHERS
 }
 
+edpPrompts = {
+    "Intro": "The Edit Distance Problem (EDP) involves finding the minimum number of operations required to transform one string into another, where each operation is either an insertion, deletion, or substitution of a single character.",
+    "Initial_question": "Find the minimum number of operations required to transform the first string {string_a} into the second string {string_b}. The operations are insertion, deletion, and substitution of a single character, each requiring 1 edit operation.",
+    "Output_content": "Please provide the minimum number of operations required to transform the first string into the second string. Offer a brief explanation of your methodology. Keep your response concise and focused.",
+    "Output_format": "Enclose your output within <root></root> tags. Present your reasoning in <reasoning></reasoning> tags and the final minimum number of operations in <final_answer></final_answer> tags, like <final_answer>{'Operations': 'MINIMUM_NUMBER_OF_OPERATIONS'}</final_answer>.",
+    "Few_shot_self": FEW_SHOT_SELF,
+    "Few_shot_others": FEW_SHOT_OTHERS
+}
+
 # NP-complete problems
 tsp_dPrompts = {
     "Intro": "The Traveling Salesman Problem (Decision Version, TSP-D) focuses on determining if a salesman can complete a route, visiting each city at least once, with the total travel distance being less than a specified value.",

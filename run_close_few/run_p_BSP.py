@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models import *
-from prompts import bspPrompts
+from prompts import bspPrompts, mfpPrompts
 from check.check_p_BSP import *
 from utils import parse_xml_to_dict
 
@@ -11,6 +11,8 @@ import pandas as pd
 import numpy as np
 import json
 import argparse
+import ast
+import random
 
 # Create the parser
 parser = argparse.ArgumentParser(description='Run BSP model script')
@@ -44,21 +46,38 @@ def construct_few_shot_examples(examples, PROMPT_STYLE):
         if PROMPT_STYLE == 'self':
             question = 'The sorted array elements are: ' + ', '.join(str(a) for a in example['question']['array'])
         elif PROMPT_STYLE == 'other':
-            question = 'The capacities of the network\'s edges are: ' + ', '.join(str(a) for a in example['question']['array'])
-        few_shot_examples += '<example{}>\nQuestion:\n'.format(i+1)+question + '\nOutput:\n' + str(example['output']) + '\n</example{}>\n\n'.format(str(i+1))
+            input_dict = ast.literal_eval(str(example['question']))
+            source_node = input_dict['source']
+            sink_node = input_dict['sink']
+
+            edges = input_dict['edges']
+            question = example['Initial_question'].format(source_node=source_node, sink_node=sink_node) + "\n The capacities of the network's edges are as follows: \n"
+            for edge in edges:
+                this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {edge['capacity']}."
+                question += this_line + '\n'
+        few_shot_examples += '<example{}>\nQuestion:\n'.format(i+1)+question + '\nAnswer:\n' + str(example['output']) + '\n</example{}>\n\n'.format(str(i+1))
 
     return few_shot_examples
 
 def runBSP(q, eg, p=bspPrompts):
     target_value = q['target']
     array = sorted(q['array'])
-    
+
+    # prompt_text = p['Intro'] + '\n' + \
+    #               p['Initial_question'].format(target_value=target_value) + '\n' + \
+    #               eg + '\n' + \
+    #               'Again, '+ p['Initial_question'].format(target_value=target_value) + '\n' + \
+    #               p['Output_format'] + '\n' + \
+    #               '\n For the question you need to solve, the sorted array elements are: ' + ', '.join(map(str, array)) + '\n'
+
     prompt_text = p['Intro'] + '\n' + \
-                  p['Initial_question'].format(target_value=target_value) + '\n' + \
-                  eg + '\n' + \
-                  'Again, '+ p['Initial_question'].format(target_value=target_value) + '\n' + \
-                  p['Output_format'] + '\n' + \
-                  '\n For the question you need to solve, the sorted array elements are: ' + ', '.join(map(str, array)) + '\n'
+                    p['Initial_question'].format(target_value=target_value) + '\n' + \
+                    p['Output_content'] + '\n' + \
+                    p['Output_format'] + '\n' + \
+                    eg + '\n' \
+                    'Again, ' + p['Initial_question'].format(target_value=target_value) + '\n' + \
+                    'Follow the format in the above examples to write your answer.\n' +\
+                    '\nThis is the new question you need to solve:\n\nQuestion:\nThe sorted array elements are: ' + ', '.join(map(str, array)) + '\nAnswer:\n'
 
     if 'gpt' in MODEL:
         output = run_gpt(prompt_text, model=MODEL)
@@ -98,7 +117,7 @@ if __name__ == '__main__':
             if dif_level < 0:
                 continue
             examples = [d for d in fewshot_data if d['complexity_level'] == dif_level+1][:5]
-            few_shot_examples = construct_few_shot_examples(examples)
+            few_shot_examples = construct_few_shot_examples(examples, PROMPT_STYLE)
 
             # save result
             output_dict = {}
@@ -121,5 +140,14 @@ if __name__ == '__main__':
                 bspResults.append({'output': '', 'correctness': False})
 
         # Save the results
+        def set_default(obj):
+            if isinstance(obj, set):
+                return list(obj)
+            raise TypeError
+
         with open(RESULT_PATH + MODEL + '_' + 'bspResults_{}_{}.json'.format(PROMPT_STYLE,DIFFICULTY_LEVEL), 'a') as f:
-            f.write(json.dumps(bspResults) + '\n')
+            f.write(json.dumps(bspResults, default=set_default) + '\n')
+        # result_file = RESULT_PATH + MODEL + '_' + 'bspResults_few_{}_{}.json'.format(PROMPT_STYLE,DIFFICULTY_LEVEL)
+        # with open(result_file, 'a') as f:
+        #     json.dump(bspResults, f)
+        #     f.write('\n')
