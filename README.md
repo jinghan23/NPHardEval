@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ### Set-up API keys
 Please set up your API keys in `secrets.txt`. **Please don't directly upload your keys to any public repository.**
 
-## Data Structure
+## Dataset
 **Directory:** `Data`
 
 The `Data` directory houses the datasets utilized in our study, categorized into `Fewshot` and `Zeroshot` datasets, corresponding to their respective experimental setups.
@@ -48,7 +48,7 @@ Data
 The data used is under `data` directory. You can find the zeroshot/fewshot under the corresponding directory. They are the data used in our report.
 
 
-## Data Generation
+## Dataset Generation
 **Directory:** `generate`
 
 In the generate directory, scripts for creating data instances tailored to different reasoning tasks are provided. These scripts are essential for generating both zero-shot and few-shot test questions. Additionally, we include utility functions for validating generated instances, ensuring quality and relevance.
