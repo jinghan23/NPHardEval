@@ -7,6 +7,19 @@ NPHardEval serves as a comprehensive benchmark for assessing the reasoning abili
     <img src="NP-hard.jpg" alt="Questions of different complexity classes" style="width:80%">
 </div>
 
+
+## Environment setup
+### Install environments
+```bash
+conda create --name llm_reason python=3.10
+conda activate llm_reason
+git clone https://github.com/casmlab/NPHardEval.git
+pip install -r requirements.txt
+```
+
+### Set-up API keys
+Please set up your API keys in `secrets.txt`. **Please don't directly upload your keys to any public repository.**
+
 ## Data Structure
 **Directory:** `Data`
 

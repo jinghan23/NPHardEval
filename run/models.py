@@ -26,8 +26,8 @@ import vertexai
 from vertexai.preview.language_models import TextGenerationModel, ChatModel
 
 ### Load secrets
-SECRET_FILE = '../../secrets.txt'
-with open('../../secrets.txt') as f:
+SECRET_FILE = '../secrets.txt'
+with open('../secrets.txt') as f:
     lines = f.readlines()
     for line in lines:
         if line.split(',')[0].strip() == "open_ai_key":
