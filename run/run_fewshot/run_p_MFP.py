@@ -39,12 +39,23 @@ EXAMPLE_PATH = '../fewshot_eg/'
 
 
 def load_data():
+    """Load the maximum flow problems.
+
+    :return: A list of maximum flow problems.
+    """
     data_path = DATA_PATH
     with open(data_path + "mfp_instances.json", 'r') as f:
         all_data = json.load(f)
     return all_data
 
+
 def construct_few_shot_examples(examples, PROMPT_STYLE, p=mfpPrompts):
+    """Constructs the few shot examples.
+
+    :param examples: A list of examples.
+    :param PROMPT_STYLE: The name of the prompt style to run.
+    :return: A string of few shot examples.
+    """
     few_shot_examples = '\n\nBelow are 5 examples:\n'
     for i, example in enumerate(examples):
         if PROMPT_STYLE == 'self':
@@ -65,48 +76,16 @@ def construct_few_shot_examples(examples, PROMPT_STYLE, p=mfpPrompts):
 
 
 def runMFP(q, eg, p=mfpPrompts):
+    """Run the maximum flow problem.
+
+    :param q: The maximum flow problem.
+    :param eg: Few shot examples.
+    :param p: The prompt dictionary.
+    :return: The output string.
+    """
     source_node = q['source']
     sink_node = q['sink']
     edges = q['edges']
-
-    # prompt_text = p['Intro'] + '\n' + \
-    #               p['Initial_question'].format(source_node=source_node, sink_node=sink_node) + '\n' + \
-    #               p['Output_content'] + '\n' + \
-    #               p['Output_format'] + '\n' + \
-    #               eg + '\n' + \
-    #               'Again, ' + p['Initial_question'].format(source_node=source_node, sink_node=sink_node) + '\n' + \
-    #               'Follow the format in the above examples to write your answer.\n' +\
-    #               '\nThis is the new question you need to solve:\n\nQuestion: the capacities of the network\'s edges are as follows: \n'
-    # for edge in edges:
-    #     this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {edge['capacity']}."
-    #     prompt_text += this_line + '\n'
-
-    # prompt_text = p['Intro'] + '\n' + \
-    #               p['Initial_question'].format(source_node=source_node, sink_node=sink_node) + '\n' + \
-    #               p['Output_content'] + '\n' + \
-    #               p['Output_format'] + '\n' + \
-    #               'Please learn from the example after the dash line (-----) at the end\n' + \
-    #               'For the problem you need to solve, here is the data -- The capacities of the network\'s edges are as follows: \n'
-    # for edge in edges:
-    #     this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {edge['capacity']}."
-    #     prompt_text += this_line + '\n'
-    # prompt_text += '----- Below this line are the examples for your reference\n'
-    # prompt_text += eg + '\n'
-    # prompt_text += 'Again, please follow the output format:\n' + p['Output_format']
-
-    # prompt_text = p['Intro'] + '\n' + \
-    #             p['Output_content'] + '\n' + \
-    #             p['Output_format'] + \
-    #             few_shot_examples + \
-    #             'Again, ' + p['Initial_question'].format(source_node=source_node, sink_node=sink_node) +\
-    #             p['Output_content'] + '\n' + \
-    #             'Follow the format in the above examples to write your answer.\n' +\
-    #             "\nThis is the new question you need to solve:\n\nQuestion:\n" +\
-    #             "The capacities of the network's edges are as follows: \n"
-    # for edge in edges:
-    #     this_line = f"Edge from {edge['from']} to {edge['to']} has a capacity of {edge['capacity']}."
-    #     prompt_text += this_line + '\n'
-    # prompt_text += '\nAnswer:\n'
 
     prompt_text = p['Intro'] + '\n' + \
                 p['Output_content'] + '\n' + \
@@ -122,8 +101,6 @@ def runMFP(q, eg, p=mfpPrompts):
         prompt_text += this_line + '\n'
     prompt_text += '\nAnswer:\n'
 
-    # print(prompt_text)
-
     if 'gpt' in MODEL:
         output = run_gpt(prompt_text, model=MODEL)
     elif 'claude' in MODEL:
@@ -133,6 +110,7 @@ def runMFP(q, eg, p=mfpPrompts):
         return None
 
     return output
+
 
 if __name__ == '__main__':
     mfpData = load_data()
@@ -197,9 +175,3 @@ if __name__ == '__main__':
         # Save the results
         with open(RESULT_PATH + MODEL + '_' + 'mfpResults_few_{}_{}.json'.format(PROMPT_STYLE,DIFFICULTY_LEVEL), 'a') as f:
             f.write(json.dumps(mfpResults, default=set_default) + '\n')
-        
-
-        # result_file = RESULT_PATH + MODEL + '_' + 'mfpResults_few_{}_{}.json'.format(PROMPT_STYLE,DIFFICULTY_LEVEL)
-        # with open(result_file, 'a') as f:
-        #     json.dump(mfpResults, f)
-        #     f.write('\n')

@@ -1,6 +1,12 @@
 import networkx as nx
 
+
 def read_dimacs_format(dimacs_str):
+    """Reads the DIMACS format string of a GCP instance.
+
+    :param dimacs_str: The DIMACS format string of the GCP instance.
+    :return: A tuple of (num_vertices, adjacency_list).
+    """
     lines = dimacs_str.strip().split('\n')
     p_line = next(line for line in lines if line.startswith('p'))
     _, _, num_vertices, num_edges = p_line.split()
@@ -16,6 +22,7 @@ def read_dimacs_format(dimacs_str):
                 adjacency_list[vertex2].add(vertex1)
 
     return num_vertices, adjacency_list
+
 
 def gcp_greedy_solution(adjacency_list):
     """Provides a greedy solution to the GCP problem.

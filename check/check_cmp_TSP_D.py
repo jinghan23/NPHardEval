@@ -12,6 +12,7 @@ def tsp_approx(distance_matrix):
     G = nx.from_numpy_array(distance_matrix)
     return nx.approximation.traveling_salesman_problem(G)
 
+
 def tsp_decision_check(distance_matrix, threshold, tour):
     """
     Checks if a given TSP tour is valid and within the threshold distance.
@@ -30,7 +31,6 @@ def tsp_decision_check(distance_matrix, threshold, tour):
     if is_feasible != (tour_distance <= threshold):
         return False, f"Feasibility mismatch: {is_feasible} vs {tour_distance} > {threshold}"
     return True, "Feasible: {} <= {}".format(tour_distance, threshold)
-
 
 
 # # Example usage:

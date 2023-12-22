@@ -81,7 +81,6 @@ def plot_final_output(col_name, df):
     tmp_df['comp_order'] = tmp_df['complexity'].map(comp_level)
     tmp_df.sort_values(by=['comp_order', 'is_close'], inplace=True)
     mean_tmp_df.sort_values(by=['comp_order'], inplace=True)
-    # plt.figure(figsize=(10, 6))
 
     # make one red palette and one blue palette
     palette = sns.color_palette("tab10", n_colors=10)
@@ -89,44 +88,22 @@ def plot_final_output(col_name, df):
     sns.pointplot(data=tmp_df[~tmp_df['is_close']], x='complexity',
             y=col_name, hue='model', linestyle='',
             alpha=0.5, marker='s', palette=palette[:5])
-    # sns.lineplot(data=mean_tmp_df[~mean_tmp_df['is_close']],
-    #         x='complexity', y=col_name, color='blue',
-    #         markersize=12, fillstyle='full', marker='s', label='Open models')
 
-    # annotate the mean value of open models
-    # for i, row in mean_tmp_df[~mean_tmp_df['is_close']].iterrows():
-    #     # plt.text(row['comp_order'] - 1, row[col_name] + 0.02,
-    #                   f'{row[col_name]:.2f}', fontsize=10, color='darkblue')
-    #     plt.text(row['comp_order'] - 1, row[col_name] + 0.02,
-    #                   f'{row[col_name]:.2f}', color='darkblue')
     sns.pointplot(data=tmp_df[tmp_df['is_close']], x='complexity', y=col_name,
                     hue='model', linestyle='', alpha=0.5, marker='^', palette=palette[5:])
-    # sns.lineplot(data=mean_tmp_df[mean_tmp_df['is_close']], x='complexity', y=col_name,
-    #                   color='red', markersize=14, fillstyle='full',
-    #                   marker='^', label='Close models')
+
     sns.lineplot(data=tmp_df, x='complexity', y=col_name, color='black',
                     marker='o', markersize=10, fillstyle='full', label='All models', errorbar=None)
     for _, row in mean_tmp_df.iterrows():
         plt.text(row['comp_order'] - 1, row[col_name] + 0.02, f'{row[col_name]:.2f}', color='black')
 
-
-    # # annotate the mean value of close models
-    # for i, row in mean_tmp_df[mean_tmp_df['is_close']].iterrows():
-    #     # plt.text(row['comp_order'] - 1, row[col_name] + 0.02,
-    #           f'{row[col_name]:.2f}', fontsize=10, color='darkred')
-    #     plt.text(row['comp_order'] - 1, row[col_name] + 0.02,
-    #                   f'{row[col_name]:.2f}', color='darkred')
-
     # set the title and labels
     if col_name == 'weighted_accuracy':
-        # plt.title(f'Weighted accuracy for different models on different complexity problems')
         plt.title("a.", loc='left')
         plt.ylabel('Weighted accuracy')
     elif col_name == 'Average accuracy':
-        # plt.title(f'Average accuracy for different models on different complexity problems')
         plt.ylabel('Average accuracy')
     else:
-        # plt.title(f'Weighted failure rate for different models on different complexity problems')
         plt.title("b.", loc='left')
         plt.ylabel('Weighted failure rate')
     # close the legend
@@ -135,17 +112,8 @@ def plot_final_output(col_name, df):
         plt.legend().remove()
     else:
         plt.legend(title='Model', bbox_to_anchor=(1.05, 1), loc='upper left')
-    # plt.xticks()
-    # plt.yticks()
-
-    # set the legend and save the figure
     plt.tight_layout()
-    # if col_name == 'weighted_failed':
-    #     plt.legend(title='Model', ncols=2, loc='best')
-    # else:
-    #     plt.legend(title='Model', ncols=2, loc='best')
     plt.ylim(0, 1.05)
-    # plt.savefig(f'figures/{col_name}.png', bbox_inches='tight')
 
 
 fig, _ = plt.subplots(1, 2)

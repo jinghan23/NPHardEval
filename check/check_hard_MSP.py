@@ -1,7 +1,13 @@
 import ast
-
 import xml.etree.ElementTree as ET
+
+
 def parse_xml_to_dict(xml_string):
+    """Parses the XML string returned by the model.
+
+    :param xml_string: The XML string returned by the model.
+    :return: A tuple of (final_answer_element, reasoning_element).
+    """
     # Parse the XML string
     root = ET.fromstring(xml_string)
 
@@ -12,6 +18,7 @@ def parse_xml_to_dict(xml_string):
     reasoning_element = root.find('reasoning')
 
     return final_answer_element, reasoning_element
+
 
 # MSP
 def mspCheck(instance, llm_string):
@@ -78,6 +85,7 @@ def mspCheck(instance, llm_string):
             return False, f"Participant {p_id} is double-booked."
 
     return True, "The solution is valid."
+
 
 # # Example usage:
 # # Define an example MSP instance

@@ -81,6 +81,7 @@ def spp_check(instance, solution, start_node=None, end_node=None):
 
     return True, "The solution is valid."
 
+
 # # Example usage:
 # # Define an example SPP instance
 # spp_instance = {

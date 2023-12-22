@@ -1,5 +1,10 @@
 def compute_min_edit_distance(string_a, string_b):
-    """Computes the minimum edit distance between two strings using dynamic programming."""
+    """Computes the minimum edit distance between two strings using dynamic programming.
+    
+    :param string_a: The first string.
+    :param string_b: The second string.
+    :return: The minimum edit distance.
+    """
     m, n = len(string_a), len(string_b)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
 
@@ -14,6 +19,7 @@ def compute_min_edit_distance(string_a, string_b):
             else:
                 dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
     return dp[m][n]
+
 
 def edp_check(instance, solution):
     """Check if the edit distance solution is valid.
@@ -33,6 +39,7 @@ def edp_check(instance, solution):
     elif reported_distance != actual_distance:
         return False, f"The reported edit distance ({reported_distance}) is incorrect. Actual distance: {actual_distance}."
     return True, "The solution is valid."
+
 
 # # Example usage:
 # # Define an example EDP instance

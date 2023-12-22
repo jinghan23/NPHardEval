@@ -1,6 +1,8 @@
 # TSP
 import numpy as np
 import ast
+import xml.etree.ElementTree as ET
+
 
 def greedy_tsp(distance_matrix):
     """
@@ -47,7 +49,7 @@ def greedy_tsp(distance_matrix):
 # print(f"The greedy TSP tour: {tour}")
 # print(f"Total distance of the greedy TSP tour: {total_distance}")
 
-import xml.etree.ElementTree as ET
+
 def parse_xml_to_dict(xml_string):
     # Parse the XML string
     root = ET.fromstring(xml_string)
@@ -59,6 +61,7 @@ def parse_xml_to_dict(xml_string):
     reasoning_element = root.find('reasoning')
 
     return final_answer_element, reasoning_element
+
 
 def tspCheck(distance_matrix, llm_string):
     """
@@ -98,6 +101,7 @@ def tspCheck(distance_matrix, llm_string):
         return False, f"The tour distance ({tour_distance}) does not match the greedy solution ({greedy_distance})."
     
     return True, "The solution is complete and matches the greedy solution distance."
+
 
 # Example usage:
 

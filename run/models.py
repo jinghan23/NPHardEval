@@ -73,17 +73,17 @@ def run_claude(text_prompt, max_tokens_to_sample: int = 3000, temperature: float
 
 # PaLM 2 model
 
-# def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float = 0, model = "chat-bison@001"):
-#     """Use Google PaLM chat model"""
-#     parameters = {
-#         "temperature": temperature, 
-#         "max_output_tokens": max_tokens_to_sample
-#     }
-#     chat = chat_model.start_chat()
-#     response = chat.send_message(text_prompt, **parameters)
-#     response = response.text
-#     time.sleep(2)
-#     return response
+def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float = 0, model = "chat-bison@001"):
+    """Use Google PaLM chat model"""
+    parameters = {
+        "temperature": temperature, 
+        "max_output_tokens": max_tokens_to_sample
+    }
+    chat = chat_model.start_chat()
+    response = chat.send_message(text_prompt, **parameters)
+    response = response.text
+    time.sleep(2)
+    return response
 
 '''
 Open-source models (choose from below, in total 5 models)
@@ -102,62 +102,62 @@ TODO:
 - UltraLM
 '''
 
-# from vllm import LLM, SamplingParams
+from vllm import LLM, SamplingParams
 
-# def run_mistral(text_prompt):
-#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
-#     llm = LLM(
-#         model='mistralai/Mistral-7B-Instruct-v0.1',
-#         tensor_parallel_size=4, 
-#         max_num_seqs=4,
-#         max_num_batched_tokens=4 * 4096,
-#     )
-#     predictions = llm.generate(text_prompt, sampling_params)
-#     return predictions
+def run_mistral(text_prompt):
+    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    llm = LLM(
+        model='mistralai/Mistral-7B-Instruct-v0.1',
+        tensor_parallel_size=4, 
+        max_num_seqs=4,
+        max_num_batched_tokens=4 * 4096,
+    )
+    predictions = llm.generate(text_prompt, sampling_params)
+    return predictions
 
-# def run_yi(text_prompt):
-#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
-#     llm = LLM(
-#         model='yi-ai/llm-yi-34b',
-#         tensor_parallel_size=4, 
-#         max_num_seqs=4,
-#         max_num_batched_tokens=4 * 4096,
-#     )
-#     predictions = llm.generate(text_prompt, sampling_params)
-#     return predictions
+def run_yi(text_prompt):
+    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    llm = LLM(
+        model='yi-ai/llm-yi-34b',
+        tensor_parallel_size=4, 
+        max_num_seqs=4,
+        max_num_batched_tokens=4 * 4096,
+    )
+    predictions = llm.generate(text_prompt, sampling_params)
+    return predictions
 
-# def run_vicuna(text_prompt):
-#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
-#     llm = LLM(
-#         model='lmsys/vicuna-13b-v1.3',
-#         tensor_parallel_size=4, 
-#         max_num_seqs=4,
-#         max_num_batched_tokens=4 * 4096,
-#     )
-#     predictions = llm.generate(text_prompt, sampling_params)
-#     return predictions
+def run_vicuna(text_prompt):
+    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    llm = LLM(
+        model='lmsys/vicuna-13b-v1.3',
+        tensor_parallel_size=4, 
+        max_num_seqs=4,
+        max_num_batched_tokens=4 * 4096,
+    )
+    predictions = llm.generate(text_prompt, sampling_params)
+    return predictions
 
-# def run_phi(text_prompt):
-#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
-#     llm = LLM(
-#         model='microsoft/phi-1_5',
-#         tensor_parallel_size=4, 
-#         max_num_seqs=4,
-#         max_num_batched_tokens=4 * 4096,
-#     )
-#     predictions = llm.generate(text_prompt, sampling_params)
-#     return predictions
+def run_phi(text_prompt):
+    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    llm = LLM(
+        model='microsoft/phi-1_5',
+        tensor_parallel_size=4, 
+        max_num_seqs=4,
+        max_num_batched_tokens=4 * 4096,
+    )
+    predictions = llm.generate(text_prompt, sampling_params)
+    return predictions
 
-# def run_baichuan(text_prompt):
-#     sampling_params = SamplingParams(temperature=0, max_tokens=512)
-#     llm = LLM(
-#         model='baichuan-inc/Baichuan-13B-Chat',
-#         tensor_parallel_size=4, 
-#         max_num_seqs=4,
-#         max_num_batched_tokens=4 * 4096,
-#     )
-#     predictions = llm.generate(text_prompt, sampling_params)
-#     return predictions
+def run_baichuan(text_prompt):
+    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    llm = LLM(
+        model='baichuan-inc/Baichuan-13B-Chat',
+        tensor_parallel_size=4, 
+        max_num_seqs=4,
+        max_num_batched_tokens=4 * 4096,
+    )
+    predictions = llm.generate(text_prompt, sampling_params)
+    return predictions
 
 # if __name__ == '__main__':
 #     # try claude2-instant
