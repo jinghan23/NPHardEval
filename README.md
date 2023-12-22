@@ -4,7 +4,7 @@
 ## Overview
 NPHardEval serves as a comprehensive benchmark for assessing the reasoning abilities of large language models (LLMs) through the lens of computational complexity classes. This repository contains datasets, data generation scripts, and experimental procedures designed to evaluate LLMs in various reasoning tasks.
 <div align="center">
-    <img src="NP-Hard.jpg" alt="Italian Trulli" style="width:80%">
+    <img src="NP-hard.jpg" alt="Questions of different complexity classes" style="width:80%">
 </div>
 
 ## Data Structure
