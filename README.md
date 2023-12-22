@@ -69,14 +69,41 @@ To successfully replicate the experiments detailed in this repository, the follo
 3. **Script Utilization**: Scripts located in the `run` directory are designed to facilitate the experimental process. This repository is meticulously organized to support distinct experimental approaches for zero-shot and few-shot scenarios.
 
 ### Execution Script
----
 **Directory:** `run` \
 **File**: `run.sh`
 
 This script is your primary tool for experiment execution. It is meticulously crafted to provide a seamless and efficient experimental workflow. Detailed instructions within `run.sh` guide users through each step of the process, ensuring a smooth and error-free execution.
 
+```bash
+$ tree run    
+run
+├── models.py
+├── prompts.py
+├── run.sh
+├── run_fewshot
+│   ├── run_p_BSP.py
+│   ├── run_p_EDP.py
+│   ├── run_p_MFP.py
+│   └── utils.py
+└── run_zeroshot
+    ├── run_cmp_GCP_D.py
+    ├── run_cmp_KSP.py
+    ├── run_cmp_TSP_D.py
+    ├── run_hard_GCP.py
+    ├── run_hard_MSP.py
+    ├── run_hard_TSP.py
+    ├── run_p_BSP.py
+    ├── run_p_EDP.py
+    ├── run_p_MFP.py
+    ├── run_p_MFP_more.py
+    ├── run_p_SPP.py
+    ├── run_p_SPP_more.py
+    └── utils.py
+
+```
+
+
 ### Answer Verification
----
 **Directory**: `check`
 
 Contained within this directory are utility functions crucial for verifying answers provided by the LLMs. These functions are automatically invoked during experiments executed via `run.sh`. As the experiment progresses, these utilities rigorously evaluate the responses from LLMs and compile the outcomes in the `Results` directory. This automated process ensures a comprehensive and objective assessment of the LLM's performance.
