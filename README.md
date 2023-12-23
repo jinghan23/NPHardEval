@@ -149,3 +149,13 @@ This directory primarily focuses on the visualization and analysis of data relat
 **Source Code** (`src` sub-directory): This sub-directory contains Python scripts dedicated to the visualization and analysis of ablation studies and research questions (RQs). The scripts, named as `visualize_ablation*.py` and `visualize_rq*.py`, provide detailed insights into different aspects of LLM performance and characteristics.
 
 Overall, the summary directory serves as a comprehensive hub for assessing and understanding the efficacy of Large Language Models in handling questions of varying complexities and types.
+
+## News
+-[2023.12.24] We release the initial version of NPHardEval, with data, generation code, answer-checking code, and run files
+
+
+## Citation
+
+
+
+
