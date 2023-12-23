@@ -56,6 +56,8 @@ def runTSP_D(adj_matrix, distance_limit, p=tsp_dPrompts):
         output = run_gpt(prompt_text, model=MODEL)
     elif 'claude' in MODEL:
         output = run_claude(prompt_text, model=MODEL)
+    elif 'bison' in MODEL:
+        output = run_palm(prompt_text, model=MODEL)
     else:
         print('Model not found')
         return None
