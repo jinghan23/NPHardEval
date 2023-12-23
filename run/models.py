@@ -173,9 +173,3 @@ def run_mpt(text_prompt):
         output = RequestOutput.outputs[0].text
         all_predictions.append(output)
     return all_predictions
-
-
-if __name__ == '__main__':
-    text_prompt = ['generate a random sentence', 'give me a dollar']
-    output = run_mpt(text_prompt)
-    print(output)
