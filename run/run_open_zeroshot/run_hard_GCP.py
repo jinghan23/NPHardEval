@@ -12,7 +12,6 @@ import json
 from tqdm import tqdm
 
 import argparse
-from utils import parse_xml_to_dict
 
 
 def load_data():
