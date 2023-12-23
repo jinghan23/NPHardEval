@@ -95,16 +95,5 @@ mspPrompts = {
     "Few_shot_others": FEW_SHOT_OTHERS
 }
 
-# TODO Need to remove before release
-# Deveplop later when coding for MAS
-# feedbackPrompts = {
-#     "Mentor":"Provide feedback for what and why the result is wrong. Can also provide high-level methodology guidence.", # simulated teacher feedback [a novel contribution]
-#     "Learner":"Discuss about the wrong answer", # traditional self correction
-#     "Wiki":"Share external knowledge without sharing the correct answer.", # tool
-#     "Main_q_mentor":"",
-#     "Main_q_learner":"",
-#     "Main_q_wiki":"",
-# }
-
 # RQ: pattern - check which and where is the dominaent strategy discovered.
 # RQ: pattern - check if more communication quantity lead to more correct answer or easier discovery of dominent strategy.
