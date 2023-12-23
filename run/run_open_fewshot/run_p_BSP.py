@@ -29,7 +29,7 @@ def construct_few_shot_examples(examples):
     return few_shot_examples
 
 
-def run_opensource_BSP(args, qs, p=bspPrompts):
+def run_opensource_fewshot_BSP(args, qs, p=bspPrompts):
     FEWSHOT_DATA_PATH = '../Data/{}/few_shot/{}_few_shots.json'.format(args.prompt_question_type, args.prompt_question_type)
     with open(FEWSHOT_DATA_PATH, 'r') as f:
         fewshot_data = json.load(f)
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
     print("Using model: {}".format(MODEL))
 
-    outputs = run_opensource_BSP(args, bspData)
+    outputs = run_opensource_fewshot_BSP(args, bspData)
     for q, output in zip(bspData, outputs):
         output_dict = {}
         output_dict['output'] = output
