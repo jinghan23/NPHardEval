@@ -17,52 +17,6 @@ def load_data():
         all_data = json.load(f)
     return all_data
 
-def runEDP(MODEL, q, p=edpPrompts):
-    string_a = q['string_a']
-    string_b = q['string_b']
-    prompt_text = p['Intro'] + '\n' + \
-                  p['Initial_question'].format(string_a=string_a, string_b=string_b) + '\n' + \
-                  p['Output_content'] + '\n' + \
-                  p['Output_format']
-
-    if 'gpt' in MODEL:
-        output = run_gpt(prompt_text, model=MODEL)
-    elif 'claude' in MODEL:
-        output = run_claude(prompt_text, model=MODEL)
-    else:
-        print('Model not found')
-        return None
-
-    return output
-
-
-def run_opensource_EDP(args, qs, p=edpPrompts):
-    all_prompts = []
-    for i, q in enumerate(tqdm(qs)):
-        string_a = q['string_a']
-        string_b = q['string_b']
-        prompt_text = p['Intro'] + '\n' + \
-                    p['Initial_question'].format(string_a=string_a, string_b=string_b) + '\n' + \
-                    p['Output_content'] + '\n' + \
-                    p['Output_format']
-        prompt_text += 'Answer:\n'
-        all_prompts.append(prompt_text)
-
-    if MODEL.startswith('mistral'):
-        output = run_mistral(all_prompts)
-    elif MODEL.startswith('yi'):
-        output = run_yi(all_prompts)
-    elif MODEL.startswith('mpt'):
-        output = run_mpt(all_prompts)
-    elif MODEL.startswith('phi'):
-        output = run_phi(all_prompts)
-    elif MODEL.startswith('vicuna'):
-        output = run_vicuna(all_prompts)
-    else:
-        raise NotImplementedError
-    return output
-
-
 def construct_few_shot_examples(examples, p):
     few_shot_examples = '\n\nBelow are 3 examples:\n\n'
     for i, example in enumerate(examples):
