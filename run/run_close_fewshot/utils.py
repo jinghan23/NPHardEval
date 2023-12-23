@@ -9,30 +9,30 @@ def append_root_tags(string):
         string += "\n</root>"
     return string
 
-def parse_xml_to_dict(xml_string: str):
-    """Parse the XML string to a dictionary.
+def parse_xml_to_dict(xml_string):
+    try:
+        # Parse the XML string
+        root = ET.fromstring(xml_string)
 
-    :param xml_string: The XML string to parse.
-    :return: A tuple of (output, reasoning).
-    """
-    # Append root tags if necessary
-    print(xml_string)
-    xml_string = append_root_tags(xml_string)
+        # Find the 'final_answer' tag
+        final_answer_element = root.find('final_answer')
 
-    # remove comments
-    remove_comment_func = lambda string: string.split('//')[0].rstrip() if '//' in string else string
-    xml_string = '\n'.join(remove_comment_func(line) for line in xml_string.split('\n'))
-    
-    # Parse the XML string
-    root = ET.fromstring(xml_string)
+        # Find the 'reasoning' tag
+        reasoning_element = root.find('reasoning')
+    except:
+        try:
+            assert '<final_answer>' in xml_string
+            assert '</final_answer>' in xml_string
+            assert '<reasoning>' in xml_string 
+            assert '</reasoning>' in xml_string
+            final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+            final_answer_end = xml_string.index('</final_answer>')
+            reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+            reasoning_end = xml_string.index('</reasoning>')
+            final_answer_element  = xml_string[final_answer_start:final_answer_end]
+            reasoning_element = xml_string[reasoning_start:reasoning_end]
+        except:
+            final_answer_element = ''
+            reasoning_element = ''
 
-    # Find the 'final_answer' tag
-    final_answer_element = root.find('final_answer')
-
-    # Find the 'reasoning' tag
-    reasoning = root.find('reasoning').text.strip()
-
-    # Convert the 'final_answer' tag to a dictionary
-    output = ast.literal_eval(final_answer_element.text.strip())
-    # print(reasoning_element.text)
-    return output, reasoning
+    return final_answer_element, reasoning_element

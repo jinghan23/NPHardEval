@@ -60,9 +60,11 @@ Under `generate/answer_generate`, we provide templates for creating few-shot exa
 ```bash
 $ tree generate
 generate
+├── __init__.py
 ├── answer_generate
 │   ├── answer_p_mfp.py
-│   └── answer_p_spp.py
+│   ├── answer_p_spp.py
+│   └── generate_fewshot.py
 ├── check_spp_mfp_instance.py
 ├── generate_cmp_GCP_D.py
 ├── generate_cmp_KSP.py
@@ -96,12 +98,27 @@ run
 ├── models.py
 ├── prompts.py
 ├── run.sh
-├── run_fewshot
+├── run_close_fewshot
 │   ├── run_p_BSP.py
 │   ├── run_p_EDP.py
 │   ├── run_p_MFP.py
 │   └── utils.py
-└── run_zeroshot
+├── run_close_zeroshot
+│   ├── run_cmp_GCP_D.py
+│   ├── run_cmp_KSP.py
+│   ├── run_cmp_TSP_D.py
+│   ├── run_hard_GCP.py
+│   ├── run_hard_MSP.py
+│   ├── run_hard_TSP.py
+│   ├── run_p_BSP.py
+│   ├── run_p_EDP.py
+│   ├── run_p_MFP.py
+│   ├── run_p_MFP_more.py
+│   ├── run_p_SPP.py
+│   ├── run_p_SPP_more.py
+│   └── utils.py
+└── run_open
+    ├── __init__.py
     ├── run_cmp_GCP_D.py
     ├── run_cmp_KSP.py
     ├── run_cmp_TSP_D.py
@@ -111,11 +128,8 @@ run
     ├── run_p_BSP.py
     ├── run_p_EDP.py
     ├── run_p_MFP.py
-    ├── run_p_MFP_more.py
     ├── run_p_SPP.py
-    ├── run_p_SPP_more.py
     └── utils.py
-
 ```
 
 
