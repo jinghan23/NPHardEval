@@ -64,6 +64,8 @@ def runTSP(q, p=tspPrompts): # q is the data for the HP-hard question, p is the 
         output = run_gpt(prompt_text,model = MODEL)
     elif 'claude' in MODEL:
         output = run_claude(text_prompt=prompt_text,model = MODEL)
+    elif 'bison' in MODEL:
+        output = run_palm(prompt_text, model=MODEL)
     else:
         # raise error
         print('Model not found')
