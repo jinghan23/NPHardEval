@@ -19,12 +19,12 @@ python run_close_fewshot/run_p_EDP.py gpt-4-1106-preview other &
 python run_close_fewshot/run_p_EDP.py claude-2 other &
 
 # Run run_p_BSP with different open source models, few-shot with other examples
-python run_open/run_p_BSP.py mistral --prompt_question_type BSP --difficulty_level 0
-python run_open/run_p_BSP.py phi --prompt_question_type BSP --difficulty_level 5
+python run_open_zeroshot/run_p_BSP.py mistral 
+python run_open_zeroshot/run_p_BSP.py phi 
 
 # Run run_p_EDP with different open source models, few-shot with other examples
-python run_open/run_p_EDP.py mistral --prompt_question_type EDP --difficulty_level 0
-python run_open/run_p_EDP.py phi --prompt_question_type EDP --difficulty_level 5
+python run_open_fewshot/run_p_EDP.py mistral --prompt_question_type EDP --difficulty_level 0
+python run_open_fewshot/run_p_EDP.py phi --prompt_question_type EDP --difficulty_level 5
 
 # Wait for all background jobs to finish
 wait
