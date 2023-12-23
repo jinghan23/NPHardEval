@@ -1,24 +1,33 @@
 import ast
+
 import xml.etree.ElementTree as ET
-
-
 def parse_xml_to_dict(xml_string):
-    """Parses the XML string returned by the model.
+    try:
+        # Parse the XML string
+        root = ET.fromstring(xml_string)
 
-    :param xml_string: The XML string returned by the model.
-    :return: A tuple of (final_answer_element, reasoning_element).
-    """
-    # Parse the XML string
-    root = ET.fromstring(xml_string)
+        # Find the 'final_answer' tag
+        final_answer_element = root.find('final_answer')
 
-    # Find the 'final_answer' tag
-    final_answer_element = root.find('final_answer')
-
-    # Find the 'reasoning' tag
-    reasoning_element = root.find('reasoning')
+        # Find the 'reasoning' tag
+        reasoning_element = root.find('reasoning')
+    except:
+        try:
+            assert '<final_answer>' in xml_string
+            assert '</final_answer>' in xml_string
+            assert '<reasoning>' in xml_string 
+            assert '</reasoning>' in xml_string
+            final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+            final_answer_end = xml_string.index('</final_answer>')
+            reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+            reasoning_end = xml_string.index('</reasoning>')
+            final_answer_element  = xml_string[final_answer_start:final_answer_end]
+            reasoning_element = xml_string[reasoning_start:reasoning_end]
+        except:
+            final_answer_element = ''
+            reasoning_element = ''
 
     return final_answer_element, reasoning_element
-
 
 # MSP
 def mspCheck(instance, llm_string):
@@ -38,9 +47,36 @@ def mspCheck(instance, llm_string):
     # print(solution.text)
 
     # convert solution to dictionary
-    solution = ast.literal_eval(solution.text)
+    if solution == '':
+        return False
+    elif solution is None:
+        return False
+    else:
+        if isinstance(solution, str):
+            try:
+                solution = ast.literal_eval(solution)
+                if solution is None:
+                    return False
+            except:
+                try:    
+                    solution = ast.literal_eval('{'+solution+'}')
+                    if solution is None:
+                        return False
+                except:
+                    return False
+        else:
+            try:
+                solution = ast.literal_eval(solution.text)
+                if solution is None:
+                    return False
+            except:
+                return False
     # convert key type to int
-    solution = {int(k):v for k,v in solution.items()}
+    if isinstance(solution, dict):
+        print(solution)
+        solution = {int(k):v for k,v in solution.items()}
+    else:
+        return False
 
     # Check if all meetings are scheduled within the available time slots
     for meeting in instance['meetings']:
@@ -85,7 +121,6 @@ def mspCheck(instance, llm_string):
             return False, f"Participant {p_id} is double-booked."
 
     return True, "The solution is valid."
-
 
 # # Example usage:
 # # Define an example MSP instance

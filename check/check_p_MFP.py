@@ -22,6 +22,34 @@ def mfp_optimal_solution(num_nodes, edge_capacities, source, target):
         max_flow = nx.maximum_flow_value(G, source, target, capacity='weight')
     return max_flow
 
+import ast
+def parse_xml_to_dict(xml_string):
+    try:
+        assert '<final_answer>' in xml_string
+        assert '</final_answer>' in xml_string
+        #assert '<reasoning>' in xml_string 
+        #assert '</reasoning>' in xml_string
+        final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+        final_answer_end = xml_string.index('</final_answer>')
+        #reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+        #reasoning_end = xml_string.index('</reasoning>')
+        final_answer_element  = xml_string[final_answer_start:final_answer_end].rstrip().strip().rstrip()
+        assert '{' in final_answer_element
+        assert '}' in final_answer_element
+        dic_start = final_answer_element.index('{')
+        dic_end = final_answer_element.index('}}') + len('}}')
+        final_answer_element = final_answer_element[dic_start:dic_end+1].rstrip().strip().rstrip()
+        reasoning_element = xml_string
+        #reasoning_element = xml_string[reasoning_start:reasoning_end].rstrip().strip().rstrip()
+        try:
+            final_answer_element = ast.literal_eval(final_answer_element)
+        except:
+            final_answer_element = ''
+    except:
+        final_answer_element = ''
+        reasoning_element = ''
+
+    return final_answer_element, reasoning_element
 
 def mfp_check(instance, solution):
     """Validate the solution of the MFP problem.
@@ -46,8 +74,19 @@ def mfp_check(instance, solution):
     edge_flows = {edge_name: 0 for edge_name in edge_capacities.keys()}
 
     # Convert solution to dictionary
-    flows = solution.get('Flows', {})
-    max_flow = solution.get('MaxFlow', -1)
+    solution, reasoning_element = parse_xml_to_dict(solution)
+    print(solution)
+    try:
+        flows = solution['Flows']
+        print(flows)
+    except:
+        flows = {}
+    try:
+        max_flow = solution['MaxFlow']
+        print(max_flow)
+    except:
+        max_flow = -1
+    print('------------------')
 
     # Get the optimal solution
     mfp_optimal_flow = mfp_optimal_solution(num_nodes, edge_capacities, start_node, end_node)
@@ -76,18 +115,21 @@ def mfp_check(instance, solution):
 
 
     # Check if the flow is valid
-    for edge, flow in flows.items():
-        flow = int(flow)
-        from_node, to_node = map(int, edge.split('->'))
-        node_flows[from_node] -= flow
-        node_flows[to_node] += flow
-        edge_name = edge_name_func(from_node, to_node)
-        edge_flow = flow
-        if from_node > to_node:
-            edge_flow = -flow
-        if edge_name not in edge_flows:
-            return False, f"Edge {edge} does not exist."
-        edge_flows[edge_name] += edge_flow
+    try:
+        for edge, flow in flows.items():
+            flow = int(flow)
+            from_node, to_node = map(int, edge.split('->'))
+            node_flows[from_node] -= flow
+            node_flows[to_node] += flow
+            edge_name = edge_name_func(from_node, to_node)
+            edge_flow = flow
+            if from_node > to_node:
+                edge_flow = -flow
+            if edge_name not in edge_flows:
+                return False, f"Edge {edge} does not exist."
+            edge_flows[edge_name] += edge_flow
+    except:
+        return False, f"The solution is not a valid dictionary."
 
     # Check the node conservation
     for node_id, node_flow in enumerate(node_flows):

@@ -1,10 +1,5 @@
 def compute_min_edit_distance(string_a, string_b):
-    """Computes the minimum edit distance between two strings using dynamic programming.
-    
-    :param string_a: The first string.
-    :param string_b: The second string.
-    :return: The minimum edit distance.
-    """
+    """Computes the minimum edit distance between two strings using dynamic programming."""
     m, n = len(string_a), len(string_b)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
 
@@ -20,7 +15,6 @@ def compute_min_edit_distance(string_a, string_b):
                 dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
     return dp[m][n]
 
-
 def edp_check(instance, solution):
     """Check if the edit distance solution is valid.
 
@@ -30,7 +24,10 @@ def edp_check(instance, solution):
     """
     string_a = instance['string_a']
     string_b = instance['string_b']
-    reported_distance = int(solution.get('Operations', -1))
+    try:
+        reported_distance = int(solution.get('Operations', -1))
+    except:
+        reported_distance = -1
 
     actual_distance = compute_min_edit_distance(string_a, string_b)
 
@@ -39,6 +36,7 @@ def edp_check(instance, solution):
     elif reported_distance != actual_distance:
         return False, f"The reported edit distance ({reported_distance}) is incorrect. Actual distance: {actual_distance}."
     return True, "The solution is valid."
+
 
 
 # # Example usage:
@@ -57,3 +55,32 @@ def edp_check(instance, solution):
 # is_valid, message = edp_check(edp_instance, edp_solution)
 # print(0)
 # print(is_valid, message)
+
+import ast
+def parse_xml_to_dict(xml_string):
+    try:
+        assert '<final_answer>' in xml_string
+        assert '</final_answer>' in xml_string
+        #assert '<reasoning>' in xml_string 
+        #assert '</reasoning>' in xml_string
+        final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+        final_answer_end = xml_string.index('</final_answer>')
+        #reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+        #reasoning_end = xml_string.index('</reasoning>')
+        final_answer_element  = xml_string[final_answer_start:final_answer_end].rstrip().strip().rstrip()
+        assert '{' in final_answer_element
+        assert '}' in final_answer_element
+        dic_start = final_answer_element.index('{')
+        dic_end = final_answer_element.index('}')
+        final_answer_element = final_answer_element[dic_start:dic_end+1].rstrip().strip().rstrip()
+        reasoning_element = xml_string
+        #reasoning_element = xml_string[reasoning_start:reasoning_end].rstrip().strip().rstrip()
+        try:
+            final_answer_element = ast.literal_eval(final_answer_element)
+        except:
+            final_answer_element = ''
+    except:
+        final_answer_element = ''
+        reasoning_element = ''
+
+    return final_answer_element, reasoning_element

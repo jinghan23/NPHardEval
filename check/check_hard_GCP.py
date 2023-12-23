@@ -1,29 +1,35 @@
 import xml.etree.ElementTree as ET
 def parse_xml_to_dict(xml_string):
-    """Parses the XML string returned by the model.
+    try:
+        # Parse the XML string
+        root = ET.fromstring(xml_string)
 
-    :param xml_string: The XML string returned by the model.
-    :return: A tuple of (final_answer_element, reasoning_element).
-    """
-    # Parse the XML string
-    root = ET.fromstring(xml_string)
+        # Find the 'final_answer' tag
+        final_answer_element = root.find('final_answer')
 
-    # Find the 'final_answer' tag
-    final_answer_element = root.find('final_answer')
-
-    # Find the 'reasoning' tag
-    reasoning_element = root.find('reasoning')
+        # Find the 'reasoning' tag
+        reasoning_element = root.find('reasoning')
+    except:
+        try:
+            assert '<final_answer>' in xml_string
+            assert '</final_answer>' in xml_string
+            assert '<reasoning>' in xml_string 
+            assert '</reasoning>' in xml_string
+            final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+            final_answer_end = xml_string.index('</final_answer>')
+            reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+            reasoning_end = xml_string.index('</reasoning>')
+            final_answer_element  = xml_string[final_answer_start:final_answer_end]
+            reasoning_element = xml_string[reasoning_start:reasoning_end]
+        except:
+            final_answer_element = ''
+            reasoning_element = ''
 
     return final_answer_element, reasoning_element
 
 
 # GCP
 def read_dimacs_format(dimacs_str):
-    """Reads the DIMACS format string of a GCP instance.
-
-    :param dimacs_str: The DIMACS format string of the GCP instance.
-    :return: A tuple of (num_vertices, adjacency_list).
-    """
     lines = dimacs_str.strip().split('\n')
     # Read the number of vertices and edges
     p_line = next(line for line in lines if line.startswith('p'))
@@ -47,24 +53,42 @@ def read_dimacs_format(dimacs_str):
 
 import ast
 def parse_answer(llm_string):
-    """Parses the answer string returned by the model.
+    # # Convert the answer string to a dictionary
+    # answer_dict = {}
+    # # Remove the braces and split the string by commas
+    # entries = answer_str.strip("}{").split(', ')
+    # for entry in entries:
+    #     vertex, color = entry.split(':')
+    #     answer_dict[int(vertex)] = color
+    # return answer_dict
 
-    :param llm_string: The answer string returned by the model.
-    :return: A dictionary of the answer.
-    """
     all_answers, reasoning_element = parse_xml_to_dict(llm_string)
-    all_answers = ast.literal_eval(all_answers.text)
+
+    if all_answers == '':
+        return {}
+    elif all_answers is None:
+        return {}
+    else:
+        if isinstance(all_answers, str):
+            try:
+                all_answers = ast.literal_eval(all_answers)
+            except:
+                try:    
+                    all_answers = ast.literal_eval('{'+all_answers+'}')
+                except:
+                    return {}
+        else:
+            all_answers = ast.literal_eval(all_answers.text)
+    # answer_dict = {}
+    # for pair in all_answers:
+    #     vertex, color = pair.split(":")
+    #     answer_dict[int(vertex)] = color
+    # convert key type to int
     all_answers = {int(k):v for k,v in all_answers.items()}
     return all_answers #answer_dict
 
 
 def gcpCheck(dimacs_str, answer_str):
-    """Validates the solution for the GCP instance.
-
-    :param dimacs_str: The DIMACS format string of the GCP instance.
-    :param answer_str: The answer returned by the model.
-    :return: A tuple of (is_correct, message).
-    """
     num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
     answer_colors = parse_answer(answer_str)
     # print(adjacency_list)
@@ -83,7 +107,6 @@ def gcpCheck(dimacs_str, answer_str):
 
     print(f"Valid coloring found with {len(set(answer_colors.values()))} colors: {answer_colors}")
     return True
-
 
 # # Example usage:
 # dimacs_format_str = """

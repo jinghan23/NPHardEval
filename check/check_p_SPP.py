@@ -4,6 +4,36 @@ import json
 import networkx as nx
 
 
+import ast
+def parse_xml_to_dict(xml_string):
+    try:
+        assert '<final_answer>' in xml_string
+        assert '</final_answer>' in xml_string
+        #assert '<reasoning>' in xml_string 
+        #assert '</reasoning>' in xml_string
+        final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+        final_answer_end = xml_string.index('</final_answer>')
+        #reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+        #reasoning_end = xml_string.index('</reasoning>')
+        final_answer_element  = xml_string[final_answer_start:final_answer_end].rstrip().strip().rstrip()
+        assert '{' in final_answer_element
+        assert '}' in final_answer_element
+        dic_start = final_answer_element.index('{')
+        dic_end = final_answer_element.index('}')
+        final_answer_element = final_answer_element[dic_start:dic_end+1].rstrip().strip().rstrip()
+        #reasoning_element = xml_string[reasoning_start:reasoning_end].rstrip().strip().rstrip()
+        try:
+            final_answer_element = ast.literal_eval(final_answer_element)
+            reasoning_element = xml_string
+        except:
+            final_answer_element = ''
+            reasoning_element = xml_string
+    except:
+        final_answer_element = ''
+        reasoning_element = ''
+
+    return final_answer_element, reasoning_element
+
 def ssp_optimal_solution(instance, source, target):
     """Provides the optimal solution for the SSP instance.
 
@@ -41,8 +71,11 @@ def spp_check(instance, solution, start_node=None, end_node=None):
         end_node = instance['nodes'][-1]
 
     # Convert solution to dictionary
-    path_string = solution.get('Path', '')
-    cost_string = solution.get('TotalDistance', '')
+    try:
+        path_string = solution.get('Path', '')
+        cost_string = solution.get('TotalDistance', '')
+    except:
+        return False, "The solution is not a dictionary."
 
     # Calculate the optimal solution
     ssp_optimal_length, ssp_optimal_path = ssp_optimal_solution(instance, start_node, end_node)
@@ -52,8 +85,11 @@ def spp_check(instance, solution, start_node=None, end_node=None):
         else:
             return True, "No path found from node {start_node} to node {end_node}."
 
-    path = list(map(int, path_string.split('->')))
-    total_cost = int(cost_string)
+    try:
+        path = list(map(int, path_string.split('->')))
+        total_cost = int(cost_string)
+    except:
+        return False, "The solution is not a valid dictionary."
 
     # Check if path starts and ends with the correct nodes
     if not path or path[0] != start_node or path[-1] != end_node:
@@ -80,7 +116,6 @@ def spp_check(instance, solution, start_node=None, end_node=None):
         return False, f"The calculated cost ({calculated_cost}) does not match the optimal solution ({ssp_optimal_length}): {ssp_optimal_path}."
 
     return True, "The solution is valid."
-
 
 # # Example usage:
 # # Define an example SPP instance

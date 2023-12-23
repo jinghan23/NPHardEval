@@ -1,8 +1,6 @@
 # TSP
 import numpy as np
 import ast
-import xml.etree.ElementTree as ET
-
 
 def greedy_tsp(distance_matrix):
     """
@@ -34,6 +32,7 @@ def greedy_tsp(distance_matrix):
 
     return tour, total_distance
 
+
 # # Example usage:
 
 # # Assuming distance_matrix is a 2D numpy array representing the distances
@@ -49,19 +48,34 @@ def greedy_tsp(distance_matrix):
 # print(f"The greedy TSP tour: {tour}")
 # print(f"Total distance of the greedy TSP tour: {total_distance}")
 
-
+import xml.etree.ElementTree as ET
 def parse_xml_to_dict(xml_string):
-    # Parse the XML string
-    root = ET.fromstring(xml_string)
+    try:
+        # Parse the XML string
+        root = ET.fromstring(xml_string)
 
-    # Find the 'final_answer' tag
-    final_answer_element = root.find('final_answer')
+        # Find the 'final_answer' tag
+        final_answer_element = root.find('final_answer')
 
-    # Find the 'reasoning' tag
-    reasoning_element = root.find('reasoning')
+        # Find the 'reasoning' tag
+        reasoning_element = root.find('reasoning')
+    except:
+        try:
+            assert '<final_answer>' in xml_string
+            assert '</final_answer>' in xml_string
+            assert '<reasoning>' in xml_string 
+            assert '</reasoning>' in xml_string
+            final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+            final_answer_end = xml_string.index('</final_answer>')
+            reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+            reasoning_end = xml_string.index('</reasoning>')
+            final_answer_element  = xml_string[final_answer_start:final_answer_end]
+            reasoning_element = xml_string[reasoning_start:reasoning_end]
+        except:
+            final_answer_element = ''
+            reasoning_element = ''
 
     return final_answer_element, reasoning_element
-
 
 def tspCheck(distance_matrix, llm_string):
     """
@@ -77,8 +91,35 @@ def tspCheck(distance_matrix, llm_string):
     # Convert the tour string to a list of integers
     # print(llm_string)
     final_answer_element, reasoning_element = parse_xml_to_dict(llm_string)
-    tour_string = ast.literal_eval(final_answer_element.text)['Path']
-    tour = list(map(int, tour_string.split('->')))
+    # convert solution to dictionary
+    if final_answer_element == '':
+        return False
+    elif final_answer_element is None:
+        return False
+    else:
+        if isinstance(final_answer_element, str):
+            try:
+                tour_string = ast.literal_eval(final_answer_element)['Path']
+                if tour_string is None:
+                    return False
+            except:
+                try:    
+                    tour_string = ast.literal_eval('{'+final_answer_element+'}')['Path']
+                    if tour_string is None:
+                        return False
+                except:
+                    return False
+        else:
+            try:
+                tour_string = ast.literal_eval(final_answer_element.text)['Path']
+                if tour_string is None:
+                    return False
+            except:
+                return False
+    try:
+        tour = list(map(int, tour_string.split('->')))
+    except:
+        return False
     # we could also prinpt `reasoning_element` to see the reasoning of the answer
     # we could also print the final distance of the tour by `final_answer_element['Distance']`
     
@@ -101,7 +142,6 @@ def tspCheck(distance_matrix, llm_string):
         return False, f"The tour distance ({tour_distance}) does not match the greedy solution ({greedy_distance})."
     
     return True, "The solution is complete and matches the greedy solution distance."
-
 
 # Example usage:
 

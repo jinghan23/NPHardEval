@@ -41,7 +41,8 @@ def generate_tsp_instances(node_nums, num_instances_per_level):
             filename = f"{DATA_PATH}synthesized_data_TSP_level_{level}_instance_{i}.csv"
             distance_matrix_to_csv(distance_matrix, filename)
 
-# Configuration for complexity levels
-num_instances_per_level = 10
-node_nums = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-generate_tsp_instances(node_nums, num_instances_per_level)
+if __name__ == '__main__':
+    # Configuration for complexity levels
+    num_instances_per_level = 10
+    node_nums = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    generate_tsp_instances(node_nums, num_instances_per_level)

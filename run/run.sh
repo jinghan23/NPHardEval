@@ -18,14 +18,5 @@ python run_fewshot/run_p_BSP.py claude-2 self &
 python run_fewshot/run_p_MFP.py gpt-4-1106-preview other &
 python run_fewshot/run_p_MFP.py claude-2 other &
 
-# Run run_hard_GCP with different open source models, zero-shot
-# TODO
-
-# Run run_hard_GCP with different open source models, few-shot self examples
-# TODO
-
-# Run run_hard_GCP with different open source models, few-shot with other examples
-# TODO
-
 # Wait for all background jobs to finish
 wait

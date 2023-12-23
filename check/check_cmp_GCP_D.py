@@ -1,12 +1,31 @@
 import networkx as nx
 
 
-def read_dimacs_format(dimacs_str):
-    """Reads the DIMACS format string of a GCP instance.
+import ast
+def parse_xml_to_dict(xml_string):
+    try:
+        assert '<final_answer>' in xml_string
+        assert '</final_answer>' in xml_string
+        assert '<reasoning>' in xml_string 
+        assert '</reasoning>' in xml_string
+        final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+        final_answer_end = xml_string.index('</final_answer>')
+        reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+        reasoning_end = xml_string.index('</reasoning>')
+        final_answer_element  = xml_string[final_answer_start:final_answer_end].rstrip().strip().rstrip()
+        reasoning_element = xml_string[reasoning_start:reasoning_end].rstrip().strip().rstrip()
+        try:
+            final_answer_element = ast.literal_eval(final_answer_element)
+        except:
+            final_answer_element = ''
+    except:
+        final_answer_element = ''
+        reasoning_element = ''
 
-    :param dimacs_str: The DIMACS format string of the GCP instance.
-    :return: A tuple of (num_vertices, adjacency_list).
-    """
+    return final_answer_element, reasoning_element
+
+
+def read_dimacs_format(dimacs_str):
     lines = dimacs_str.strip().split('\n')
     p_line = next(line for line in lines if line.startswith('p'))
     _, _, num_vertices, num_edges = p_line.split()
@@ -22,7 +41,6 @@ def read_dimacs_format(dimacs_str):
                 adjacency_list[vertex2].add(vertex1)
 
     return num_vertices, adjacency_list
-
 
 def gcp_greedy_solution(adjacency_list):
     """Provides a greedy solution to the GCP problem.
@@ -50,7 +68,10 @@ def gcp_decision_check(dimacs_str, answer, k_colors):
     :return: A tuple of (is_correct, message).
     """
     num_vertices, adjacency_list = read_dimacs_format(dimacs_str)
-    is_feasible = answer.get('Feasible', 'no').lower() == 'yes'
+    try:
+        is_feasible = answer.get('Feasible', 'no').lower() == 'yes'
+    except:
+        return False, "Feasible key not found"
     num_colors, coloring = gcp_greedy_solution(adjacency_list)
     exist_optimal = num_colors <= k_colors
     if is_feasible != exist_optimal:

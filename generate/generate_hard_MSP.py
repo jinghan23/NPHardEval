@@ -77,7 +77,8 @@ complexity_params = [
     (11, 12, 13)  # Level 10
 ]
 
-# Example usage:
-num_instances = 10  # Number of instances to generate per complexity level
-instances = generate_msp_instances(num_instances, complexity_params)
-save_instances_to_json(instances, DATA_PATH+'msp_instances.json')
+if __name__ == '__main__':
+    # Example usage:
+    num_instances = 10  # Number of instances to generate per complexity level
+    instances = generate_msp_instances(num_instances, complexity_params)
+    save_instances_to_json(instances, DATA_PATH+'msp_instances.json')

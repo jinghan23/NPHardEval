@@ -2,6 +2,28 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
+import ast
+def parse_xml_to_dict(xml_string):
+    try:
+        assert '<final_answer>' in xml_string
+        assert '</final_answer>' in xml_string
+        assert '<reasoning>' in xml_string 
+        assert '</reasoning>' in xml_string
+        final_answer_start = xml_string.index('<final_answer>') + len('<final_answer>') 
+        final_answer_end = xml_string.index('</final_answer>')
+        reasoning_start = xml_string.index('<reasoning>') + len('<reasoning>')
+        reasoning_end = xml_string.index('</reasoning>')
+        final_answer_element  = xml_string[final_answer_start:final_answer_end].rstrip().strip().rstrip()
+        reasoning_element = xml_string[reasoning_start:reasoning_end].rstrip().strip().rstrip()
+        try:
+            final_answer_element = ast.literal_eval(final_answer_element)
+        except:
+            final_answer_element = ''
+    except:
+        final_answer_element = ''
+        reasoning_element = ''
+
+    return final_answer_element, reasoning_element
 
 def tsp_approx(distance_matrix):
     """Returns an approximate solution to the TSP problem.
@@ -12,7 +34,6 @@ def tsp_approx(distance_matrix):
     G = nx.from_numpy_array(distance_matrix)
     return nx.approximation.traveling_salesman_problem(G)
 
-
 def tsp_decision_check(distance_matrix, threshold, tour):
     """
     Checks if a given TSP tour is valid and within the threshold distance.
@@ -21,7 +42,10 @@ def tsp_decision_check(distance_matrix, threshold, tour):
     :param threshold: The maximum distance allowed.
     :param tour: A dictionary containing the feasibility.
     """
-    is_feasible = tour.get('Feasible', 'no').lower() == 'yes'
+    try:
+        is_feasible = tour.get('Feasible', 'no').lower() == 'yes'
+    except:
+        return False, "Output format incorrect"
 
     # Calculate the approxed distance of the tour
     tours = tsp_approx(distance_matrix)
@@ -31,6 +55,7 @@ def tsp_decision_check(distance_matrix, threshold, tour):
     if is_feasible != (tour_distance <= threshold):
         return False, f"Feasibility mismatch: {is_feasible} vs {tour_distance} > {threshold}"
     return True, "Feasible: {} <= {}".format(tour_distance, threshold)
+
 
 
 # # Example usage:
