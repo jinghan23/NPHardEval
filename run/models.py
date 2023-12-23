@@ -6,6 +6,13 @@ import requests
 import time
 import pandas as pd
 
+from openai import OpenAI
+import anthropic
+from google.cloud import aiplatform
+import vertexai
+from vertexai.preview.language_models import TextGenerationModel, ChatModel
+from vllm import LLM, SamplingParams
+
 
 '''
 Close-source models
@@ -19,11 +26,6 @@ TODO:
 - Gemini
 '''
 
-from openai import OpenAI
-import anthropic
-from google.cloud import aiplatform
-import vertexai
-from vertexai.preview.language_models import TextGenerationModel, ChatModel
 
 ### Load secrets
 SECRET_FILE = '../secrets.txt'
@@ -87,79 +89,93 @@ def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float =
 
 '''
 Open-source models (choose from below, in total 5 models)
-Inbcluded:
-- [v] Vicuna
-- [v] Mistral-7b
-- [v] Yi-34b
-- [v] Phi
-- [v] baichuan
-TODO:
-- Falcon
-- Fuyu
-- LlaMa 2
-- LLaMa 1
-- Alpaca
-- UltraLM
 '''
 
-from vllm import LLM, SamplingParams
-
 def run_mistral(text_prompt):
-    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    sampling_params = SamplingParams(temperature=0, max_tokens=1000)
     llm = LLM(
         model='mistralai/Mistral-7B-Instruct-v0.1',
         tensor_parallel_size=4, 
         max_num_seqs=4,
-        max_num_batched_tokens=4 * 4096,
+        max_num_batched_tokens=4 * 8192,
     )
+    text_prompt = ['<s>[INST] '+ t + '[INST]\n' for t in text_prompt]
     predictions = llm.generate(text_prompt, sampling_params)
-    return predictions
+    all_predictions = []
+    for RequestOutput in predictions:
+        output = RequestOutput.outputs[0].text
+        all_predictions.append(output)
+    return all_predictions
+
 
 def run_yi(text_prompt):
-    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    sampling_params = SamplingParams(temperature=0, max_tokens=1000)
     llm = LLM(
-        model='yi-ai/llm-yi-34b',
+        model='01-ai/Yi-34B-Chat',
         tensor_parallel_size=4, 
         max_num_seqs=4,
         max_num_batched_tokens=4 * 4096,
     )
+    text_prompt = ['<|im_start|> '+ t + '<|im_end|>\n<|im_start|>assistant\n' for t in text_prompt]
     predictions = llm.generate(text_prompt, sampling_params)
-    return predictions
+    all_predictions = []
+    for RequestOutput in predictions:
+        output = RequestOutput.outputs[0].text
+        all_predictions.append(output)
+    return all_predictions
+
 
 def run_vicuna(text_prompt):
-    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    sampling_params = SamplingParams(temperature=0, max_tokens=1000)
     llm = LLM(
         model='lmsys/vicuna-13b-v1.3',
         tensor_parallel_size=4, 
         max_num_seqs=4,
-        max_num_batched_tokens=4 * 4096,
+        max_num_batched_tokens=4 * 2048,
     )
     predictions = llm.generate(text_prompt, sampling_params)
-    return predictions
+    all_predictions = []
+    for RequestOutput in predictions:
+        output = RequestOutput.outputs[0].text
+        all_predictions.append(output)
+    return all_predictions
+
 
 def run_phi(text_prompt):
-    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+    sampling_params = SamplingParams(temperature=0, max_tokens=1000)
     llm = LLM(
         model='microsoft/phi-1_5',
+        trust_remote_code=True,
         tensor_parallel_size=4, 
         max_num_seqs=4,
-        max_num_batched_tokens=4 * 4096,
+        max_num_batched_tokens=4 * 2048,
     )
     predictions = llm.generate(text_prompt, sampling_params)
-    return predictions
+    all_predictions = []
+    for RequestOutput in predictions:
+        output = RequestOutput.outputs[0].text
+        all_predictions.append(output)
+    return all_predictions
 
-def run_baichuan(text_prompt):
-    sampling_params = SamplingParams(temperature=0, max_tokens=512)
+
+def run_mpt(text_prompt):
+    sampling_params = SamplingParams(temperature=0, max_tokens=1000)
     llm = LLM(
-        model='baichuan-inc/Baichuan-13B-Chat',
+        model='mosaicml/mpt-30b-instruct',
+        trust_remote_code=True,
         tensor_parallel_size=4, 
         max_num_seqs=4,
         max_num_batched_tokens=4 * 4096,
     )
     predictions = llm.generate(text_prompt, sampling_params)
-    return predictions
+    all_predictions = []
+    for RequestOutput in predictions:
+        output = RequestOutput.outputs[0].text
+        all_predictions.append(output)
+    return all_predictions
 
-# if __name__ == '__main__':
-#     # try claude2-instant
-#     resp = run_palm(text_prompt= "I am a human, and I am a", model="chat-bison@001") # claude-2 works claude-instant-1.2
-#     print(resp)
+
+if __name__ == '__main__':
+    text_prompt = ['generate a random sentence', 'give me a dollar']
+    output = run_mpt(text_prompt)
+    print(output)
