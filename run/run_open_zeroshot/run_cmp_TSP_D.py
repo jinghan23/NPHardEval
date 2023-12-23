@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import json
 import argparse
+from utils import parse_xml_to_dict
 
 
 def load_data():
