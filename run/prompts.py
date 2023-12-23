@@ -94,6 +94,3 @@ mspPrompts = {
     "Few_shot_self": FEW_SHOT_SELF,
     "Few_shot_others": FEW_SHOT_OTHERS
 }
-
-# RQ: pattern - check which and where is the dominaent strategy discovered.
-# RQ: pattern - check if more communication quantity lead to more correct answer or easier discovery of dominent strategy.
