@@ -41,8 +41,8 @@ with open('../secrets.txt') as f:
 
 openai_client = OpenAI(api_key=open_ai_key)
 claude_client = anthropic.Anthropic(api_key=anthropic_key)
-# vertexai.init(project = palm_project_id, location="us-central1")
-# chat_model = ChatModel.from_pretrained("chat-bison@001")
+vertexai.init(project = palm_project_id, location="us-central1")
+chat_model = ChatModel.from_pretrained("chat-bison@001")
 ### Run Models
 
 
