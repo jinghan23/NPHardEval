@@ -12,6 +12,7 @@ import json
 from tqdm import tqdm
 
 import argparse
+from utils import parse_xml_to_dict
 
 
 def load_data():
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     for q, output in zip(gcpData, outputs):
         output_dict = {}
         output_dict['output'] = output
+        output, _ = parse_xml_to_dict(llm_string)
         correctness = gcpCheck(q,output)
         output_dict['correctness'] = correctness
         gcpResults.append(output_dict)
