@@ -59,7 +59,8 @@ Overall, the summary directory serves as a comprehensive hub for assessing and u
 | Vicuna-13b | 0.08663 | 0.1242 | 0.0158 |
 | Phi-1.5 | 0.0 | 0.0 | 0.0067 |
 
-upcoming: Gemini, Mixtral (Mistral-7b MoE), Phi-2
+Metric: accuracy
+Upcoming: Gemini, Mixtral (Mistral-7b MoE), Phi-2
 
 
 ## Full Experiments
@@ -202,7 +203,7 @@ Contained within this directory are utility functions crucial for verifying answ
 
 
 ## Citation
-
+TBD
 
 
 
