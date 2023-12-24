@@ -72,7 +72,6 @@ Data
     ├── GCP
     ├── GCP_Decision
     ├── KSP
-    ├── MFP
     ├── MSP
     ├── SPP
     ├── TSP
@@ -97,7 +96,6 @@ $ tree generate
 generate
 ├── __init__.py
 ├── answer_generate
-│   ├── answer_p_mfp.py
 │   ├── answer_p_spp.py
 │   └── generate_fewshot.py
 ├── check_spp_mfp_instance.py
@@ -109,7 +107,6 @@ generate
 ├── generate_hard_TSP.py
 ├── generate_p_BSP.py
 ├── generate_p_EDP.py
-├── generate_p_MFP.py
 └── generate_p_SPP.py
 ```
 
@@ -136,7 +133,6 @@ run
 ├── run_close_fewshot
 │   ├── run_p_BSP.py
 │   ├── run_p_EDP.py
-│   ├── run_p_MFP.py
 │   └── utils.py
 ├── run_close_zeroshot
 │   ├── run_cmp_GCP_D.py
@@ -147,10 +143,7 @@ run
 │   ├── run_hard_TSP.py
 │   ├── run_p_BSP.py
 │   ├── run_p_EDP.py
-│   ├── run_p_MFP.py
-│   ├── run_p_MFP_more.py
 │   ├── run_p_SPP.py
-│   ├── run_p_SPP_more.py
 │   └── utils.py
 └── run_open
     ├── __init__.py
@@ -162,7 +155,6 @@ run
     ├── run_hard_TSP.py
     ├── run_p_BSP.py
     ├── run_p_EDP.py
-    ├── run_p_MFP.py
     ├── run_p_SPP.py
     └── utils.py
 ```
@@ -190,7 +182,7 @@ Overall, the summary directory serves as a comprehensive hub for assessing and u
 
 
 ## Citation
-
+TBD
 
 
 
