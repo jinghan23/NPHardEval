@@ -20,6 +20,20 @@ pip install -r requirements.txt
 ### Set-up API keys
 Please set up your API keys in `secrets.txt`. **Please don't directly upload your keys to any public repository.**
 
+### Quick Start
+Let's use the GPT 4 Turbo model (GPT-4-1106-preview) and the EDP for example. 
+
+For its zeroshot experiment, you can use:
+```python
+python run_close_zeroshot/run_hard_GCP.py gpt-4-1106-preview
+```
+
+For its fewshot experiment, 
+```python
+python run_close_fewshot/run_hard_GCP.py gpt-4-1106-preview self
+```
+We currrently support fewshot examples from the same question (self), and may support examples from other questions (other) in the future.
+
 ## Dataset
 **Directory:** `Data`
 
