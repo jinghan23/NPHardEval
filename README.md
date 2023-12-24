@@ -105,11 +105,10 @@ run
 
 ## Key Takeaways on Experiments
 In general, our benchmark offers several advantages compared with current benchmarks:
-* The questions in the benchmark utilized are grounded in the established computational complexity hierarchy, a concept extensively studied in theoretical computer science. This foundation enables us to leverage existing research to rigorously and quantitatively measure an LLM's logical reasoning extent.
-* We incorporate automatic checking mechanisms for these questions, as they are based on algorithmically computable problems. Human intervention is not required to determine the correctness of the LLM's responses.
-* The method allows for the automatic generation of questions so that we can update the benchmark on a monthly basis. This monthly-refreshed benchmark helps prevent model's overfitting as we can always generate novel questions with varying difficulty levels for evaluation.
-* The benchmark excludes numerical computation from the questions, which is notably difficult for LLM. This focus allows for a more accurate evaluation of an LLM's pure logical reasoning ability, as numerical computation can obscure this assessment.
-* Our methodology offers insights into a long-standing and intriguing question within the field: the degree to which LLMs are capable of tackling problems classified as NP-hard or NP-complete.
+* Data construction grounded in the established computational complexity hierarchy
+* Automatic checking mechanisms 
+* Automatic generation of datapoints
+* Complete focus on reasoning while exclude numerical computation
 
 In addition to developing the benchmark, we compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
 
