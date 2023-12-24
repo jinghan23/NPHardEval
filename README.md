@@ -130,7 +130,7 @@ run
 We compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
 
 * All models exhibit decreased accuracy and increased failure rates with rising task complexity, especially at NP-Hard levels.
-* The transition from P to NP-Complete complexity impacts the performance models differently
+* The transition from P to NP-Complete complexity impacts the performance models differently.
 * Closed-source models like GPT 4 Turbo and Claude 2 maintain consistent performance across difficulty levels of in-context examples, indicating robust learning from few-shot examples, while open-source models vary in adaptability.
 
 
