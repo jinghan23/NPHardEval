@@ -3,6 +3,13 @@
 
 ## Overview
 **NPHardEval** serves as a comprehensive benchmark for assessing the reasoning abilities of large language models (LLMs) through the lens of computational complexity classes. This repository contains datasets, data generation scripts, and experimental procedures designed to evaluate LLMs in various reasoning tasks.
+
+Our benchmark offers several advantages compared with current benchmarks:
+* Data construction grounded in the established computational complexity hierarchy
+* Automatic checking mechanisms 
+* Automatic generation of datapoints
+* Complete focus on reasoning while exclude numerical computation
+
 <div align="center">
     <img src="NP-hard.jpg" alt="Questions of different complexity classes" style="width:80%">
 </div>
@@ -120,13 +127,7 @@ run
 ```
 
 ## Key Takeaways on Experiments
-In general, our benchmark offers several advantages compared with current benchmarks:
-* Data construction grounded in the established computational complexity hierarchy
-* Automatic checking mechanisms 
-* Automatic generation of datapoints
-* Complete focus on reasoning while exclude numerical computation
-
-In addition to developing the benchmark, we compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
+We compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
 
 * All models exhibit decreased accuracy and increased failure rates with rising task complexity, especially at NP-Hard levels.
 * The transition from P to NP-Complete complexity impacts the performance models differently
