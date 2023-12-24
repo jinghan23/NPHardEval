@@ -48,16 +48,16 @@ Overall, the summary directory serves as a comprehensive hub for assessing and u
 
 | model  | P | NP-complete | NP-hard
 | ------------- | ------------- | ------------- |------------- |
-| GPT-4  |  |  |  |
-| GPT-3.5  |  |  |  |
-| Claude-2 |  |  |  |
-| Claude-instant-1.2  |  |  |  |
-| Palm2 |  |  |  |
-| Yi-34b |  |  |  |
-| Mistral-7b |  |  |  |
-| MPT-30b |  |  |  |
-| Vicuna-13b |  |  |  |
-| Phi-1.5 |  |  |  |
+| GPT-4  | 0.7218 | 0.3533 | 0.05705 |
+| GPT-3.5  | 0.4933 | 0.1823 | 0.0351 |
+| Claude-2 | 0.3127 | 0.4654 | 0.0242 |
+| Claude-instant-1.2  | 0.2927 | 0.1914 | 0.0073 |
+| Palm2 | 0.2223 | 0.2151 | 0.05633 |
+| Yi-34b | 0.2618 | 0.2982 | 0.0079 |
+| Mistral-7b | 0.07452 | 0.4024 | 0.0697 |
+| MPT-30b | 0.0006 | 0.0 | 0.0 |
+| Vicuna-13b | 0.08663 | 0.1242 | 0.0158 |
+| Phi-1.5 | 0.0 | 0.0 | 0.0067 |
 
 upcoming: Gemini, Mixtral (Mistral-7b MoE), Phi-2
 
