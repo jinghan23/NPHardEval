@@ -45,7 +45,22 @@ This directory primarily focuses on the visualization and analysis of data relat
 Overall, the summary directory serves as a comprehensive hub for assessing and understanding the efficacy of Large Language Models in handling questions of varying complexities and types.
 
 ## Leaderboard
-[Add a table]
+
+| model  | P | NP-complete | NP-hard
+| ------------- | ------------- | ------------- |------------- |
+| GPT-4  |  |  |  |
+| GPT-3.5  |  |  |  |
+| Claude-2 |  |  |  |
+| Claude-instant-1.2  |  |  |  |
+| Palm2 |  |  |  |
+| Yi-34b |  |  |  |
+| Mistral-7b |  |  |  |
+| MPT-30b |  |  |  |
+| Vicuna-13b |  |  |  |
+| Phi-1.5 |  |  |  |
+
+upcoming: Gemini, Mixtral (Mistral-7b MoE), Phi-2
+
 
 ## Full Experiments
 To successfully replicate the experiments detailed in this repository, the following prerequisites must be met:
