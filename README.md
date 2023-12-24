@@ -112,14 +112,9 @@ In general, our benchmark offers several advantages compared with current benchm
 
 In addition to developing the benchmark, we compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
 
-* **Reasoning Ability of Foundation Models Decay Hugely at the NP-Hard Complexity Level**: All models exhibit decreased accuracy and increased failure rates with rising task complexity, especially at NP-Hard levels.
-[Add Figure 3]
-
-* **Varied Impact on Model Performance**: There are reasoning ability gaps among foundation models. The transition from P to NP-Complete complexity impacts models differently, with GPT 4 Turbo showing the leading performance across different questions; Claude 2 and GPT 3.5 Turbo demonstrates great performance in some tasks, while showing significant performance shifts and strengths in others. Open models are often less capable of reasoning in complex tasks and difficult questions, while Mistral-7b and Yi-34b demonstrate equal reasoning abilities in some tasks as the close source models. 
-[Add Figure 2]
-
-* **Generalization through In-context Learning**: The model performances vary across few-shot examples' difficulties. Closed-source models like GPT 4 Turbo and Claude 2 maintain consistent performance across difficulty levels, indicating robust learning from few-shot examples, while open-source models vary in adaptability.
-[Add Figure 6]
+* All models exhibit decreased accuracy and increased failure rates with rising task complexity, especially at NP-Hard levels.
+* The transition from P to NP-Complete complexity impacts the performance models differently
+* Closed-source models like GPT 4 Turbo and Claude 2 maintain consistent performance across difficulty levels of in-context examples, indicating robust learning from few-shot examples, while open-source models vary in adaptability.
 
 
 ## Benchmark Construction
