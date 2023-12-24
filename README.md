@@ -1,4 +1,4 @@
-# NPHardEval: Benchmarking Reasoning Ability of Large Language Models via Complexity Classes
+# NPHardEval: Dynamic Benchmark on Reasoning Ability of Large Language Models via Complexity Classes
 
 
 ## Overview
