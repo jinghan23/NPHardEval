@@ -69,8 +69,8 @@ if __name__ == '__main__':
     # MODEL = 'gpt-4-1106-preview'
     # # models: gpt-4-1106-preview, gpt-3.5-turbo-1106, claude-2, claude-instant, palm-2
 
-    DATA_PATH = '../Data/MSP/'
-    RESULT_PATH = '../Results/'
+    DATA_PATH = '../../Data/MSP/'
+    RESULT_PATH = '../../Results/'
 
 
     # load data

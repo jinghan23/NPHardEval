@@ -71,8 +71,8 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../Data/TSP_Decision/'
-    RESULT_PATH = '../Results/'
+    DATA_PATH = '../../Data/TSP_Decision/'
+    RESULT_PATH = '../../Results/'
 
     tsp_d_Data = load_data()
     #tsp_d_Data = tsp_d_Data[:2]

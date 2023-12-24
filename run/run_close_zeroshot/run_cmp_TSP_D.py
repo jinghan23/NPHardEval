@@ -24,8 +24,8 @@ args = parser.parse_args()
 # Script logic using args.model as the model name
 MODEL = str(args.model)
 
-DATA_PATH = '../Data/TSP_Decision/'
-RESULT_PATH = '../Results/'
+DATA_PATH = '../../Data/TSP_Decision/'
+RESULT_PATH = '../../Results/'
 
 def load_data():
     data_path = DATA_PATH

@@ -29,7 +29,7 @@ def construct_few_shot_examples(examples, p):
 
 
 def run_opensource_fewshot_EDP(args, qs, p=edpPrompts):
-    FEWSHOT_DATA_PATH = '../Data/{}/few_shot/{}_few_shots.json'.format(args.prompt_question_type, args.prompt_question_type)
+    FEWSHOT_DATA_PATH = '../../Data/{}/few_shot/{}_few_shots.json'.format(args.prompt_question_type, args.prompt_question_type)
     with open(FEWSHOT_DATA_PATH, 'r') as f:
         fewshot_data = json.load(f)
 
@@ -85,8 +85,8 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../Data/EDP/'
-    RESULT_PATH = '../Results/'
+    DATA_PATH = '../../Data/EDP/'
+    RESULT_PATH = '../../Results/'
 
     # load data
     edpData = load_data()

@@ -27,8 +27,8 @@ MODEL = str(args.model)
 # MODEL = 'gpt-4-1106-preview'
 # # models: gpt-4-1106-preview, gpt-3.5-turbo-1106, claude-2, claude-instant, palm-2
 
-DATA_PATH = '../Data/GCP/'
-RESULT_PATH = '../Results/'
+DATA_PATH = '../../Data/GCP/'
+RESULT_PATH = '../../Results/'
 
 
 def load_data():

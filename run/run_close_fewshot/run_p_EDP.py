@@ -30,9 +30,9 @@ MODEL = str(args.model)
 PROMPT_STYLE = str(args.prompt_style)
 # DIFFICULTY_LEVEL = int(args.difficulty_level)
 
-DATA_PATH = '../Data/EDP/'
-RESULT_PATH = '../Results_fewshot/'
-EXAMPLE_PATH = '../fewshot_eg/'
+DATA_PATH = '../../Data/EDP/'
+RESULT_PATH = '../../Results_fewshot/'
+EXAMPLE_PATH = '../../Data/Fewshot/FewshotExample/'
 
 
 def load_data():

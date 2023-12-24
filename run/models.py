@@ -29,7 +29,7 @@ TODO:
 
 ### Load secrets
 SECRET_FILE = '../secrets.txt'
-with open('../secrets.txt') as f:
+with open(SECRET_FILE) as f:
     lines = f.readlines()
     for line in lines:
         if line.split(',')[0].strip() == "open_ai_key":
@@ -88,7 +88,16 @@ def run_palm(text_prompt, max_tokens_to_sample: int = 1000, temperature: float =
     return response
 
 '''
-Open-source models (choose from below, in total 5 models)
+Open-source models
+Included:
+- Mistral-7B, 
+- Yi-34B, 
+- Vicuna-13b, 
+- Phi-1.5, and 
+- MPT-30B
+TODO:
+- Mixtral (Mistral-7b MoE)
+- Phi-2
 '''
 
 def run_mistral(text_prompt):
