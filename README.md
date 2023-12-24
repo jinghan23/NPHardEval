@@ -7,6 +7,27 @@ NPHardEval serves as a comprehensive benchmark for assessing the reasoning abili
     <img src="NP-hard.jpg" alt="Questions of different complexity classes" style="width:80%">
 </div>
 
+## Key Takeaways
+In general, our benchmark offers several advantages compared with current benchmarks:
+* The questions in the benchmark utilized are grounded in the established computational complexity hierarchy, a concept extensively studied in theoretical computer science. This foundation enables us to leverage existing research to rigorously and quantitatively measure an LLM's logical reasoning extent.
+* We incorporate automatic checking mechanisms for these questions, as they are based on algorithmically computable problems. Human intervention is not required to determine the correctness of the LLM's responses.
+* The method allows for the automatic generation of questions so that we can update the benchmark on a monthly basis. This monthly-refreshed benchmark helps prevent model's overfitting as we can always generate novel questions with varying difficulty levels for evaluation.
+* The benchmark excludes numerical computation from the questions, which is notably difficult for LLM. This focus allows for a more accurate evaluation of an LLM's pure logical reasoning ability, as numerical computation can obscure this assessment.
+* Our methodology offers insights into a long-standing and intriguing question within the field: the degree to which LLMs are capable of tackling problems classified as NP-hard or NP-complete.
+
+In addition to developing the benchmark, we compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
+
+* **Reasoning Ability of Foundation Models Decay Hugely at the NP-Hard Complexity Level**: All models exhibit decreased accuracy and increased failure rates with rising task complexity, especially at NP-Hard levels.
+[Add Figure 3]
+
+* **Varied Impact on Model Performance**: There are reasoning ability gaps among foundation models. The transition from P to NP-Complete complexity impacts models differently, with GPT 4 Turbo showing the leading performance across different questions; Claude 2 and GPT 3.5 Turbo demonstrates great performance in some tasks, while showing significant performance shifts and strengths in others. Open models are often less capable of reasoning in complex tasks and difficult questions, while Mistral-7b and Yi-34b demonstrate equal reasoning abilities in some tasks as the close source models. 
+[Add Figure 2]
+
+* **Generalization through In-context Learning**: The model performances vary across few-shot examples' difficulties. Closed-source models like GPT 4 Turbo and Claude 2 maintain consistent performance across difficulty levels, indicating robust learning from few-shot examples, while open-source models vary in adaptability.
+[Add Figure 6]
+
+## Leaderboard
+[Add a table]
 
 ## Environment setup
 ### Install environments
