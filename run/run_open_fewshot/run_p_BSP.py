@@ -30,7 +30,7 @@ def construct_few_shot_examples(examples):
 
 
 def run_opensource_fewshot_BSP(args, qs, p=bspPrompts):
-    FEWSHOT_DATA_PATH = '../../Data/{}/few_shot/{}_few_shots.json'.format(args.prompt_question_type, args.prompt_question_type)
+    FEWSHOT_DATA_PATH = '../../Data/Fewshot/FewshotExample/{}_few_shots.json'.format(args.prompt_question_type)
     with open(FEWSHOT_DATA_PATH, 'r') as f:
         fewshot_data = json.load(f)
 
