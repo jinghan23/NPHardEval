@@ -215,8 +215,5 @@ Contained within this directory are utility functions crucial for verifying answ
 -[2023.12.24] We release the first version of NPHardEval, with data, generation code, answer-checking code, and run files
 
 
-## Citation
-TBD
-
 
 
