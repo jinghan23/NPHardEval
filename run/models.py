@@ -159,6 +159,7 @@ def run_phi(text_prompt):
         max_num_seqs=4,
         max_num_batched_tokens=4 * 2048,
     )
+    text_prompt = [t + 'Answer: \n' for t in text_prompt]
     predictions = llm.generate(text_prompt, sampling_params)
     all_predictions = []
     for RequestOutput in predictions:
