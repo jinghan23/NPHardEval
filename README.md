@@ -1,5 +1,16 @@
 # NPHardEval: Benchmarking Reasoning Ability of Large Language Models via Complexity Classes
-
+Code and data repository for paper [NPHardEval: Dynamic Benchmark on Reasoning Ability of Large Language](http://arxiv.org/abs/2312.14890)
+To cite:
+```bibtex
+@misc{fan2023nphardeval,
+      title={NPHardEval: Dynamic Benchmark on Reasoning Ability of Large Language Models via Complexity Classes}, 
+      author={Lizhou Fan and Wenyue Hua and Lingyao Li and Haoyang Ling and Yongfeng Zhang and Libby Hemphill},
+      year={2023},
+      eprint={2312.14890},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI}
+}
+```
 
 ## Overview
 **NPHardEval** serves as a comprehensive benchmark for assessing the reasoning abilities of large language models (LLMs) through the lens of computational complexity classes. This repository contains datasets, data generation scripts, and experimental procedures designed to evaluate LLMs in various reasoning tasks.
