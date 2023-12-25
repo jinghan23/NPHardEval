@@ -72,7 +72,7 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../../Data/TSP_Decision/'
+    DATA_PATH = '../../Data/Zeroshot/TSP_Decision/'
     RESULT_PATH = '../../Results/'
 
     tsp_d_Data = load_data()
