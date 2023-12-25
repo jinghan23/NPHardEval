@@ -1,6 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append('../..')
 
 from models import *
 from prompts import gcp_dPrompts
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../../Data/GCP_Decision/'
+    DATA_PATH = '../../Data/Zeroshot/GCP_Decision/'
     RESULT_PATH = '../../Results/'
 
     # load data
