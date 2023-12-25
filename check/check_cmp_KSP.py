@@ -95,6 +95,7 @@ def kspCheck(instance, solution):
     
     return True, f"The solution is valid with total weight {total_weight} and total value {total_value}."
 
+
 # # Example usage:
 # # Define an example KSP instance
 # # ksp_instance = {
