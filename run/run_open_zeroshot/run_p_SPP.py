@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../../Data/SPP/'
+    DATA_PATH = '../../Data/Zeroshot/SPP/'
     RESULT_PATH = '../../Results/'
 
 
