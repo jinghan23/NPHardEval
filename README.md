@@ -12,7 +12,7 @@ To cite:
       primaryClass={cs.AI}
 }
 ```
-
+--------------------
 ## Overview
 **NPHardEval** serves as a comprehensive benchmark for assessing the reasoning abilities of large language models (LLMs) through the lens of computational complexity classes. This repository contains datasets, data generation scripts, and experimental procedures designed to evaluate LLMs in various reasoning tasks.
 
@@ -25,6 +25,8 @@ Our benchmark offers several advantages compared with current benchmarks:
 <div align="center">
     <img src="NP-hard.jpg" alt="Questions of different complexity classes" style="width:80%">
 </div>
+
+--------------------
 
 ## Quick Start
 ### Environment setup
@@ -63,6 +65,8 @@ This directory primarily focuses on the visualization and analysis of data relat
 
 Overall, the summary directory serves as a comprehensive hub for assessing and understanding the efficacy of Large Language Models in handling questions of varying complexities and types.
 
+--------------------
+
 ## Leaderboard
 
 | model  | P | NP-complete | NP-hard
@@ -81,6 +85,8 @@ Overall, the summary directory serves as a comprehensive hub for assessing and u
 Metric: average weighted accuracy
 
 Upcoming: Gemini, Mixtral (Mistral-7b MoE), Phi-2
+
+--------------------
 
 
 ## Full Experiments
@@ -139,13 +145,14 @@ run
     └── utils.py
 ```
 
-## Key Takeaways on Experiments
+### Key Takeaways on Experiments
 We compare different foundation models' reasoning ability across task complexity and experimented with different prompt styles to understand their in-context learnability. Our study reveals a notable disparity in performance between closed-source and open-source models not only on general reasoning ability but also the disparity between "learning" and "mimicking". In particular, we found:
 
 * All models exhibit decreased accuracy and increased failure rates with rising task complexity, especially at NP-Hard levels.
 * The transition from P to NP-Complete complexity impacts the performance models differently.
 * Closed-source models like GPT 4 Turbo and Claude 2 maintain consistent performance across difficulty levels of in-context examples, indicating robust learning from few-shot examples, while open-source models vary in adaptability.
 
+--------------------
 
 ## Benchmark Construction
 **Directory:** `Data`
@@ -210,6 +217,9 @@ generate
 **Directory**: `check`
 
 Contained within this directory are utility functions crucial for verifying answers provided by the LLMs. These functions are automatically invoked during experiments executed via `run.sh`. As the experiment progresses, these utilities rigorously evaluate the responses from LLMs and compile the outcomes in the `Results` directory. This automated process ensures a comprehensive and objective assessment of the LLM's performance.
+
+
+--------------------
 
 
 ## News
