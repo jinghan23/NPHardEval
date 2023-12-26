@@ -59,7 +59,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run GCP-D model script')
 
     # Add an argument for the model name
-    parser.add_argument('--model', type=str, help='The name of the model to run')
+    parser.add_argument('model', type=str, help='The name of the model to run')
 
     # Parse the argument
     args = parser.parse_args()
