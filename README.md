@@ -186,37 +186,6 @@ Data
 The data used is under `data` directory. You can find the zeroshot/fewshot under the corresponding directory. They are the data used in our report.
 
 
-### Datapoints Generation
-**Directory:** `generate`
-
-In the generate directory, scripts for creating data instances tailored to different reasoning tasks are provided. These scripts are essential for generating both zero-shot and few-shot test questions. Additionally, we include utility functions for validating generated instances, ensuring quality and relevance.
-
-**Special Mention for Fewshot Data Generation:**
-Under `generate/answer_generate`, we provide templates for creating few-shot examples, offering guidance for extending this methodology to additional reasoning tasks.
-
-**Structure:**
-```bash
-$ tree generate
-generate
-├── __init__.py
-├── answer_generate
-│   ├── answer_p_mfp.py
-│   ├── answer_p_spp.py
-│   └── generate_fewshot.py
-├── check_spp_mfp_instance.py
-├── generate_cmp_GCP_D.py
-├── generate_cmp_KSP.py
-├── generate_cmp_TSP_D.py
-├── generate_hard_GCP.py
-├── generate_hard_MSP.py
-├── generate_hard_TSP.py
-├── generate_p_BSP.py
-├── generate_p_EDP.py
-├── generate_p_MFP.py
-└── generate_p_SPP.py
-```
-
-
 ### Answer Verification
 **Directory**: `check`
 
