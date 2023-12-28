@@ -185,7 +185,6 @@ Data
 ### Datapoints
 The data used is under `data` directory. You can find the zeroshot/fewshot under the corresponding directory. They are the data used in our report.
 
-
 ### Answer Verification
 **Directory**: `check`
 
