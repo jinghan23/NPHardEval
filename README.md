@@ -34,7 +34,9 @@ Our benchmark offers several advantages compared with current benchmarks:
 conda create --name llm_reason python=3.10
 conda activate llm_reason
 git clone https://github.com/casmlab/NPHardEval.git
+cd NPHardEval
 pip install -r requirements.txt
+pip install vllm==0.2.0
 ```
 
 ### Set-up API keys
