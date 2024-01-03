@@ -18,7 +18,7 @@ def load_data():
     return all_data
 
 def construct_few_shot_examples(examples, p):
-    few_shot_examples = '\n\nBelow are 3 examples:\n\n'
+    few_shot_examples = '\n\nBelow are 5 examples:\n\n'
     for i, example in enumerate(examples):
         string_a = example['question']['string_a']
         string_b = example['question']['string_b']
@@ -38,7 +38,7 @@ def run_opensource_fewshot_EDP(args, qs, p=edpPrompts):
         dif_level = (i//10) + args.difficulty_level
         if dif_level < 0:
             continue
-        examples = [d for d in fewshot_data if d['complexity_level'] == dif_level+1][:3]
+        examples = [d for d in fewshot_data if d['complexity_level'] == dif_level+1][:5]
         few_shot_examples = construct_few_shot_examples(examples, p)
         string_a = q['string_a']
         string_b = q['string_b']
@@ -52,18 +52,19 @@ def run_opensource_fewshot_EDP(args, qs, p=edpPrompts):
                   '\nAnswer:\n'
         all_prompts.append(prompt_text)
 
-    if MODEL.startswith('mistral'):
-        output = run_mistral(all_prompts)
-    elif MODEL.startswith('yi'):
-        output = run_yi(all_prompts)
-    elif MODEL.startswith('mpt'):
-        output = run_mpt(all_prompts)
-    elif MODEL.startswith('phi'):
-        output = run_phi(all_prompts)
-    elif MODEL.startswith('vicuna'):
-        output = run_vicuna(all_prompts)
-    else:
-        raise NotImplementedError
+    output = run_models(MODEL, all_prompts)
+    # if MODEL.startswith('mistral'):
+    #     output = run_mistral(all_prompts)
+    # elif MODEL.startswith('yi'):
+    #     output = run_yi(all_prompts)
+    # elif MODEL.startswith('mpt'):
+    #     output = run_mpt(all_prompts)
+    # elif MODEL.startswith('phi'):
+    #     output = run_phi(all_prompts)
+    # elif MODEL.startswith('vicuna'):
+    #     output = run_vicuna(all_prompts)
+    # else:
+    #     raise NotImplementedError
     return output
 
 
@@ -85,7 +86,7 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../../Data/EDP/'
+    DATA_PATH = '../../Data/Zeroshot/EDP/'
     RESULT_PATH = '../../Results/'
 
     # load data
@@ -104,5 +105,5 @@ if __name__ == '__main__':
         correctness = edp_check(q,parsed_result)
         output_dict['correctness'] = correctness
         edpResults.append(output_dict)
-    with open(RESULT_PATH+MODEL+'_'+'edpResults_{}_{}.json'.format(args.prompt_question_type, args.difficulty_level), 'w') as f:
+    with open(RESULT_PATH+MODEL+'_'+'edpResults_5shot_{}_{}.json'.format(args.prompt_question_type, args.difficulty_level), 'w') as f:
         f.write(json.dumps(edpResults) + '\n')
