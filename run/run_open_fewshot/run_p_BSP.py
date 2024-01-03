@@ -54,18 +54,19 @@ def run_opensource_fewshot_BSP(args, qs, p=bspPrompts):
                   '\nThis is the new question you need to solve:\n\nQuestion:\nThe sorted array elements are: ' + ', '.join(map(str, array)) + '\nAnswer:\n'
         all_prompts.append(prompt_text)
 
-    if MODEL.startswith('mistral'):
-        output = run_mistral(all_prompts)
-    elif MODEL.startswith('yi'):
-        output = run_yi(all_prompts)
-    elif MODEL.startswith('mpt'):
-        output = run_mpt(all_prompts)
-    elif MODEL.startswith('phi'):
-        output = run_phi(all_prompts)
-    elif MODEL.startswith('vicuna'):
-        output = run_vicuna(all_prompts)
-    else:
-        raise NotImplementedError
+    output = run_models(MODEL, all_prompts)
+    # if MODEL.startswith('mistral'):
+        # output = run_mistral(all_prompts)
+    # elif MODEL.startswith('yi'):
+    #     output = run_yi(all_prompts)
+    # elif MODEL.startswith('mpt'):
+    #     output = run_mpt(all_prompts)
+    # elif MODEL.startswith('phi'):
+    #     output = run_phi(all_prompts)
+    # elif MODEL.startswith('vicuna'):
+    #     output = run_vicuna(all_prompts)
+    # else:
+    #     raise NotImplementedError
     return output
 
 if __name__ == '__main__':
@@ -84,7 +85,7 @@ if __name__ == '__main__':
     # Script logic using args.model as the model name
     MODEL = str(args.model)
 
-    DATA_PATH = '../../Data/BSP/'
+    DATA_PATH = '../../Data/Zeroshot/BSP/'
     RESULT_PATH = '../../Results/'
 
     # load data
