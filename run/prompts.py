@@ -30,6 +30,33 @@ bspPrompts = {
     "Few_shot_others": FEW_SHOT_OTHERS
 }
 
+bspPrompt = {
+    "Intro": "The Binary Search Problem (BSP) deals with finding the position of a target value within a sorted array using a binary search algorithm, which efficiently narrows down the search range.",
+    "Initial_question": "Find the position of the target value {target_value} in the sorted array. The index begins with 0. The array elements are: ",
+    "Output_content": "Please identify the position of the target value in the array. Offer a brief, step-by-step account of your search process. Aim for conciseness in your response.",
+    "Output_format": "Your output should be enclosed in <root></root> tags. Include your search process in <reasoning></reasoning> tags and the final position of the target value in <final_answer></final_answer> tags, like <final_answer>{'Position': 'TARGET_POSITION'}</final_answer>.",
+    "Few_shot_self": FEW_SHOT_SELF,
+    "Few_shot_others": FEW_SHOT_OTHERS
+}
+
+sasPrompt = {
+    "Intro": "The Binary Search Problem (BSP) deals with finding the position of a target value within a sorted array using a binary search algorithm, which efficiently narrows down the search range.",
+    "Initial_question": "Find the position of the target value {target_value} in the sorted array. The index begins with 0. The array elements are:",
+    "Output_content": "Please identify the position of the target value in the array. Offer a brief, step-by-step account of your search process. Aim for conciseness in your response.",
+    "Output_format": "Your output should be enclosed in <root></root> tags. Include your search process in <reasoning></reasoning> tags and the final position of the target value in <final_answer></final_answer> tags, like <final_answer>{'Position': 'TARGET_POSITION'}</final_answer>.",
+    "Few_shot_self": FEW_SHOT_SELF,
+    "Few_shot_others": FEW_SHOT_OTHERS
+}
+
+edpPrompt = {
+    "Intro": "The Edit Distance Problem (EDP) involves finding the minimum number of operations required to transform one string into another, where each operation is either an insertion, deletion, or substitution of a single character.",
+    "Initial_question": "Find the minimum number of operations required to transform the first string \"{string_a}\" into the second string \"{string_b}\". The operations are insertion, deletion, and substitution of a single character, each requiring 1 edit operation.",
+    "Output_content": "Please provide the minimum number of operations required to transform the first string into the second string. Offer a brief explanation of your methodology. Keep your response concise and focused.",
+    "Output_format": "Enclose your output within <root></root> tags. Present your reasoning in <reasoning></reasoning> tags and the final minimum number of operations in <final_answer></final_answer> tags, like <final_answer>{'Operations': 'MINIMUM_NUMBER_OF_OPERATIONS'}</final_answer>.",
+    "Few_shot_self": FEW_SHOT_SELF,
+    "Few_shot_others": FEW_SHOT_OTHERS
+}
+
 edpPrompts = {
     "Intro": "The Edit Distance Problem (EDP) involves finding the minimum number of operations required to transform one string into another, where each operation is either an insertion, deletion, or substitution of a single character.",
     "Initial_question": "Find the minimum number of operations required to transform the first string {string_a} into the second string {string_b}. The operations are insertion, deletion, and substitution of a single character, each requiring 1 edit operation.",

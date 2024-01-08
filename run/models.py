@@ -104,10 +104,11 @@ def run_models(model, text_prompt):
     sampling_params = SamplingParams(temperature=0, max_tokens=1000)
     llm = LLM(
         model=model,
-        download_dir="/ssddata/jhzhang/compression_theory/Cache",
+        download_dir="/GPUFS/yt_ust_junxianh_1/jhzhang/compression_theory/Cache",
+        # tensor_parallel_size=1,
         trust_remote_code=True,
         # max_num_seqs=4,
-        # max_num_batched_tokens=4 * 8192,
+        # max_num_batched_tokens=4 * 2048,
     )
     # text_prompt = ['<s>[INST] '+ t + '[INST]\n' for t in text_prompt]
     predictions = llm.generate(text_prompt, sampling_params)

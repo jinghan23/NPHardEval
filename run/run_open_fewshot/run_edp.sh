@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # CUDA_VISIBLE_DEVICES=2 python run_p_BSP.py meta-llama/Llama-2-13b-hf --prompt_question_type BSP --difficulty_level 0
-# CUDA_VISIBLE_DEVICES=3 python run_p_BSP.py \
-#     "/GPUFS/yt_ust_junxianh_1/jhzhang/compression_theory/Cache/models--mistralai--Mistral-7B-v0.1/snapshots/26bca36bde8333b5d7f72e9ed20ccda6a618af24" \
-#     --prompt_question_type BSP \
+# CUDA_VISIBLE_DEVICES=6 python run_p_EDP.py \
+#     "/GPUFS/yt_ust_junxianh_1/jhzhang/compression_theory/Cache/models--mistralai--Mistral-7B-v0.1/snapshots/26bca36bde8333b5d7f72e9ed20ccda6a618af24/" \
+#     --prompt_question_type EDP \
 #     --difficulty_level 0
 # CUDA_VISIBLE_DEVICES=1 pdython run_p_EDP.py mistral --prompt_question_type EDP --difficulty_level 0
 
@@ -74,7 +74,7 @@ models=(
 )
 
 for model in "${models[@]}"; do
-    CUDA_VISIBLE_DEVICES=7 python run_p_BSP.py $model --prompt_question_type BSP --difficulty_level 0
+    CUDA_VISIBLE_DEVICES=6 python run_p_EDP.py $model --prompt_question_type EDP --difficulty_level 0
 done
 
 # models=(

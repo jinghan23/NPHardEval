@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models import *
-from prompts import edpPrompts
+from prompts import edpPrompts, edpPrompt
 from check.check_p_EDP import *
 from tqdm import tqdm
 import time
@@ -18,7 +18,7 @@ def load_data():
     return all_data
 
 def construct_few_shot_examples(examples, p):
-    few_shot_examples = '\n\nBelow are 5 examples:\n\n'
+    few_shot_examples = '\n\nBelow are 3 examples:\n\n'
     for i, example in enumerate(examples):
         string_a = example['question']['string_a']
         string_b = example['question']['string_b']
@@ -27,8 +27,23 @@ def construct_few_shot_examples(examples, p):
 
     return few_shot_examples
 
+def doc_to_text(doc, p):
+    question = p['Initial_question'].format(string_a=doc['string_a'], string_b=doc['string_b']) + " "
+    # question += p['Output_content'] + " "
+    question += p['Output_format'] + " "
+    return question
 
-def run_opensource_fewshot_EDP(args, qs, p=edpPrompts):
+def construct_fewshot_examples(examples, p):
+    fewshot_examples = ""
+    for example in examples:
+        question = doc_to_text(example['question'], p)
+        answer = str(example['output'])
+        fewshot_example = "Question: "+ question + "\nAnswer:\n" + answer
+        fewshot_examples += fewshot_example + "\n\n"
+    return fewshot_examples
+
+
+def run_opensource_fewshot_EDP(args, qs, p=edpPrompt):
     FEWSHOT_DATA_PATH = '../../Data/Fewshot/FewshotExample/{}_few_shots.json'.format(args.prompt_question_type)
     with open(FEWSHOT_DATA_PATH, 'r') as f:
         fewshot_data = json.load(f)
@@ -38,18 +53,21 @@ def run_opensource_fewshot_EDP(args, qs, p=edpPrompts):
         dif_level = (i//10) + args.difficulty_level
         if dif_level < 0:
             continue
-        examples = [d for d in fewshot_data if d['complexity_level'] == dif_level+1][:5]
-        few_shot_examples = construct_few_shot_examples(examples, p)
-        string_a = q['string_a']
-        string_b = q['string_b']
-        prompt_text = p['Intro'] + '\n' + \
-                  p['Initial_question'].format(string_a=string_a, string_b=string_b) + '\n' + \
-                  p['Output_content'] + '\n' + \
-                  p['Output_format'] + \
-                  few_shot_examples + \
-                  'Here is the question you need to solve:\n' + p['Initial_question'].format(string_a=string_a, string_b=string_b) + '\n' + \
-                  'Follow the format in the above examples to write your answer.\n' +\
-                  '\nAnswer:\n'
+        examples = [d for d in fewshot_data if d['complexity_level'] == dif_level+1][:3]
+        # few_shot_examples = construct_few_shot_examples(examples, p)
+        # string_a = q['string_a']
+        # string_b = q['string_b']
+        # prompt_text = p['Intro'] + '\n' + \
+        #           p['Initial_question'].format(string_a=string_a, string_b=string_b) + '\n' + \
+        #           p['Output_content'] + '\n' + \
+        #           p['Output_format'] + \
+        #           few_shot_examples + \
+        #           'Here is the question you need to solve:\n' + p['Initial_question'].format(string_a=string_a, string_b=string_b) + '\n' + \
+        #           'Follow the format in the above examples to write your answer.\n' +\
+        #           '\nAnswer:\n'
+        prompt_text = construct_fewshot_examples(examples, p) + "Question: "+ doc_to_text(q, p) + "\nAnswer:\n"
+        # if i == 99:
+            # print(prompt_text)
         all_prompts.append(prompt_text)
 
     output = run_models(MODEL, all_prompts)
@@ -87,7 +105,7 @@ if __name__ == '__main__':
     MODEL = str(args.model)
 
     DATA_PATH = '../../Data/Zeroshot/EDP/'
-    RESULT_PATH = '../../Results/'
+    RESULT_PATH = '../../Results/edp_prompts13_3s/'
 
     # load data
     edpData = load_data()
@@ -101,9 +119,10 @@ if __name__ == '__main__':
     for q, output in zip(edpData, outputs):
         output_dict = {}
         parsed_result, reasoning = parse_xml_to_dict(output)
-        output_dict['output'] = parsed_result
+        output_dict['output'] = output
         correctness = edp_check(q,parsed_result)
         output_dict['correctness'] = correctness
         edpResults.append(output_dict)
-    with open(RESULT_PATH+MODEL+'_'+'edpResults_5shot_{}_{}.json'.format(args.prompt_question_type, args.difficulty_level), 'w') as f:
+    model_name = MODEL.split('/')[-4]
+    with open(RESULT_PATH+model_name+'_'+'edpResults_3shot_{}_{}.json'.format(args.prompt_question_type, args.difficulty_level), 'w') as f:
         f.write(json.dumps(edpResults) + '\n')
